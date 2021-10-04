@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="interceptor" />
+        <module name="mapper" />
+        <module name="orm" />
+        <module name="injector" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="injector" target="17" />
+      <module name="interceptor" target="17" />
+      <module name="mapper" target="17" />
+      <module name="orm" target="17" />
+      <module name="write_your_own_java_framework_exercices" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
