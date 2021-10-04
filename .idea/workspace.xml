@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="add support of Github action">
+    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="add maven cache">
       <change beforePath="$PROJECT_DIR$/.github/workflows/maven.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/maven.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +66,8 @@
     <MESSAGE value="update README.md" />
     <MESSAGE value="add IDEA files" />
     <MESSAGE value="add support of Github action" />
-    <option name="LAST_COMMIT_MESSAGE" value="add support of Github action" />
+    <MESSAGE value="update IDEA files" />
+    <MESSAGE value="add maven cache" />
+    <option name="LAST_COMMIT_MESSAGE" value="add maven cache" />
   </component>
 </project>
