@@ -6,17 +6,17 @@ The idea is to implement an object, the `JSONWriter`, that is able to convert an
 A `JSONWriter` is able to convert
 - basic JSON type like boolean, int or String
 - can be configured to handle specific type like `MonthDay` of `java.time`
-- recursive types, types composed of other types, likes Java Beans or records 
+- recursive types, types composed of other types, likes Java Beans or records
 
 Here is an example of a `Person` defined as a record, with the `Address` defined as a bean.
 
 ```java
 class Address {
-  private boolean international;
-  
-  public boolean isInternational() {
-    return international;
-  }
+   private boolean international;
+
+   public boolean isInternational() {
+      return international;
+   }
 }
 record Person(@JSONProperty("birth-day") MonthDay birthday, Address address) { }
 ```
@@ -26,11 +26,11 @@ and calls `toJSON()` to get the corresponding JSON text.
 
 ```java
 var writer = new JSONWriter();
-writer.configure(MonthDay.class,
-    monthDay -> writer.toJSON(monthDay.getMonth() + "-" + monthDay.getDayOfMonth()));
+        writer.configure(MonthDay.class,
+        monthDay -> writer.toJSON(monthDay.getMonth() + "-" + monthDay.getDayOfMonth()));
 
-var person = new Person(MonthDay.of(4, 17), new Address());
-var json = writer.toJSON(person);  // {"birth-day": "APRIL-17", "address": {"international": false}}
+        var person = new Person(MonthDay.of(4, 17), new Address());
+        var json = writer.toJSON(person);  // {"birth-day": "APRIL-17", "address": {"international": false}}
 ```
 
 
@@ -48,7 +48,7 @@ The unit tests are in [JSONWriterTest.java](src/test/java/com/github/forax/frame
    Then check that the tests in the nested class "Q2" all pass.
 
    Note: the method `Utils.beanInfo()` already provides a way to get the `BeanInfo` of a class.
-         the method `Utils.invoke()` deals with the exception correctly when calling a `Method`.
+   the method `Utils.invoke()` deals with the exception correctly when calling a `Method`.
 
 3. The problem with the current solution is that the `BeanInfo` and the properties are computed each times
    even if the properties of a class are always the same.
@@ -61,14 +61,14 @@ The unit tests are in [JSONWriterTest.java](src/test/java/com/github/forax/frame
    - either it's a primitive those only need the object to generate the JSON text
    - or it's a bean type, those need the object, and the writer to recursively call `writer.toJSON()`
      on the properties
-   Thus to represent the computation, we can declare a private functional interface `Generator` that takes
-   a `JSONWriter` and an `Object` as parameter.
+     Thus to represent the computation, we can declare a private functional interface `Generator` that takes
+     a `JSONWriter` and an `Object` as parameter.
    ```java
    private interface Generator {
      String generate(JSONWriter writer, Object bean);
    }
    ```
-   Change your code to use `ClassValue<Gneerator>` instead of a `ClassValue<PropertyDescriptor[]>,
+   Change your code to use `ClassValue<Generator>` instead of a `ClassValue<PropertyDescriptor[]>`,
    and modify the implementation of the method `toJSON()` accordingly.
    All the tests from the previous questions should still pass.
 
