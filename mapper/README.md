@@ -75,7 +75,7 @@ The unit tests are in [JSONWriterTest.java](src/test/java/com/github/forax/frame
 5. Adds a method `configure()` that takes a `Class` and a lambda that takes an instance of that class
    and returns a string and modify `toJSON()` to work with instances of the configured classes.
    Internally, a HashMap that associates a class to the computation of the JSON text using the lambda.
-   Then check that the tests in the nested class "Q4" all pass.
+   Then check that the tests in the nested class "Q5" all pass.
 
    **Note**: the lambda takes a value and returns a value thus it can be typed by a `java.util.function.Function`.
    The type of the class, and the type of the first parameter of the lambda are the same,
@@ -93,17 +93,17 @@ The unit tests are in [JSONWriterTest.java](src/test/java/com/github/forax/frame
    ```
    To support that, add a check if the getter is annotated with the annotation `@JSONProperty`
    and in that case, use the name provided by the annotation instead of the name of the property.
-   Then check that the tests in the nested class "Q5" all pass
+   Then check that the tests in the nested class "Q6" all pass
 
 7. Modify the code to support not only Java beans but also [records](../COMPANION.md#record) by refactoring
    your code to have two private methods  that takes a Class and returns either the properties of the bean
    or the properties of the records.
    ```java
-   private static Stream<PropertyDescriptor> beanProperties(Class<?> type) {
+   private static List<PropertyDescriptor> beanProperties(Class<?> type) {
      // TODO
    }
 
-   private static Stream<PropertyDescriptor> recordProperties(Class<?> type) {
+   private static List<PropertyDescriptor> recordProperties(Class<?> type) {
      // TODO
    }
    ```
