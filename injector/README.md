@@ -21,7 +21,7 @@ provides 3 ways to implicitly get an instance of a class
   this methods bypass the default security model of Java using **deep reflection**, relying on either
   not having a module declared or the package being open in the module-info.java. Because of that,
   this is not the recommended way of doing injection.
-  
+
 We will only implement the constructor based and setter based dependency injection.
 
 
@@ -70,9 +70,9 @@ class Circle {
 ```
 
 We can register the `Point(0, 0)` as the instance that will always be returned when an instance of `Point` is requested.
-We can register a `Supplier` (here, one that always return "hello) when an instance of `String` is requested.
+We can register a `Supplier` (here, one that always return "hello") when an instance of `String` is requested.
 We can register a class `Circle.class` (the second parameter), that will be instantiated when an instance of `Circle`
-is requested
+is requested.
 
 ```java
 var registry = new InjectorRegistry();
@@ -92,19 +92,19 @@ The unit tests are in [InjectorRegistryTest.java](src/test/java/com/github/forax
 
 1. Create a class `InjectorRegistry` and add the methods `registerInstance(type, instance)` and
    `lookupInstance(type)` that respectively registers an instance into a `Map` and retrieves an instance for
-   a type. It is impossible to register two instances for the same type and `lookupInstance(type)` should
-   throw an exception if no instance have been registered for a type.
+   a type. `registerInstance(type, instance)` should allow registering only one instance per type and
+   `lookupInstance(type)` should throw an exception if no instance have been registered for a type.
    Then check that the tests in the nested class "Q1" all pass.
-   
+
    Note: for now, the instance does not have to be an instance of the type `type`.
-         You can use [Map.putIfAbsent()](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html#putIfAbsent(K,V))
-         to detect if there is already a pair with the same key in the `Map` in one call.
+   You can use [Map.putIfAbsent()](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html#putIfAbsent(K,V))
+   to detect if there is already a pair/entry with the same key in the `Map` in one call.
 
 
 2. We want to enforce that the instance has to be an instance of the type taken as parameter.
    For that, declare a `T` and say that the type of the `Class`and the type of the instance is the same.
    Then use the same trick for `lookupInstance(type)` and check that the tests in the nested class "Q2" all pass.
-   
+
    Note: inside `lookupInstance(type)`, now that we now that the instance we return has to be
    an instance of the type, we can use
    [Class.cast()](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html#cast(java.lang.Object))
@@ -113,13 +113,13 @@ The unit tests are in [InjectorRegistryTest.java](src/test/java/com/github/forax
 
 3. We now want to add the method `registerProvider(type, supplier)` that register a supplier (a function with
    no parameter that return a value) that will be called each time an instance is requested.
-   An astute reader can remark that a supplier can always return the same instance so we do not need two `Map`s,
+   An astute reader can remark that a supplier can always return the same instance thus we do not need two `Map`s,
    but only one that stores suppliers.
-   Add the method `registerProvider(type, supplier)` and modify your impelmentation to support it.
+   Add the method `registerProvider(type, supplier)` and modify your implementation to support it.
    Then check that the tests in the nested class "Q3" all pass.
-   
 
-4. In order to implement the injection using setters, we find need to find all the
+
+4. In order to implement the injection using setters, we need to find all the
    [Bean properties](../COMPANION.md#java-bean-and-beaninfo)
    that have a setter [annotated](../COMPANION.md#methodisannotationpresent-methodgetannotation-methodgetannotations)
    with `@Inject`.
@@ -127,9 +127,9 @@ The unit tests are in [InjectorRegistryTest.java](src/test/java/com/github/forax
    all properties (`PropertyDescriptor`) that have a setter annotated with `@Inject`.
    Then check that the tests in the nested class "Q4" all pass.
 
-   Note: There is a method `Utils.beanInfo()`.
+   Note: The class `Utils` already defines a method `beanInfo()`.
 
-  
+
 5. We want to add a method `registerProviderClass(type, providerClass)` that takes a type and a class,
    the `providerClass` implementing that type and register a recipe that create a new instance of
    `providerClass` by calling the default constructor. This instance is initialized by calling all the
@@ -138,21 +138,22 @@ The unit tests are in [InjectorRegistryTest.java](src/test/java/com/github/forax
    Write the method `registerProviderClass(type, providerClass)` and
    check that the tests in the nested class "Q5" all pass.
 
-   Note: The methods `Utils.defaultConstructor()`, `Utils.newInstance()` and `Utils.invokeMethod()`
-   are available.
+   Note: The class `Utils` defines the methods `defaultConstructor()`, `newInstance()` and `invokeMethod()`.
 
 
-6. We want to add the support of constructor injection. For that, we want to modify the code
-   that instantiate the `providerClass` to first check if there is not **one**
+6. We want to add the support of constructor injection.
+   The idea is that either only one of the
    [public constructors](../COMPANION.md#classgetmethod-classgetmethods-classgetconstructors)
-   annotated with `@Inject` and if not call the default constructor.
-   Modify the code of `registerProviderClass(type, providerClass)` to support constructor
-   injection. Then check that the tests in the nested class "Q6" all pass.
-   
-   Note: that unlike with setters where the provider is ask when needed, with a constructor,
-         we can verify that the providers of the parameter of the constructor are available
-         before creating any instances. This requires to register the provider class
-         in a reverse topological order guaranteeing that there is no cycle.
+   of the `providerClass` is annotated with `@Inject` or a public default constructor
+   (a constructor with no parameter) should exist.
+   Modify the code that instantiate the `providerClass` to use that constructor to
+   creates an instance.
+   Then check that the tests in the nested class "Q6" all pass.
+
+   Note: unlike with setters where the provider is ask when needed, with a constructor,
+   we can verify that the providers of the parameter of the constructor are available
+   before creating any instances. This requires to register the provider class
+   in a reverse topological order guaranteeing that there is no cycle.
 
 
 
