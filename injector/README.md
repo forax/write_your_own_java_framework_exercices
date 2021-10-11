@@ -25,6 +25,24 @@ provides 3 ways to implicitly get an instance of a class
 We will only implement the constructor based and setter based dependency injection.
 
 
+### Early vs Late checking
+
+When injecting instances, an error can occur if the `InjectorRegistry` has no recipe to create
+an instance of a class. Depending on the implementation of the injector, the error can be
+detected either
+- when a class that asks for injection is registered
+- when an instance of a class asking for injection is requested
+
+To see the difference in terms of implementation, we will implement both techniques.
+- injection based on constructors will be checked early,
+  all dependency classes **must** be present at the registration time.
+- injection based on setters will be checked lately,
+  each dependency class is only checked when the setter that takes that class is called.
+
+Because constructors are checked early, it means that all the dependency of the constructors
+must be already registered **before** the class defining that constructor can be registered.
+
+
 ### Configuration
 
 There are several ways to configure an injector, it can be done
