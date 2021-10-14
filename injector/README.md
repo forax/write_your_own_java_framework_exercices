@@ -33,14 +33,9 @@ detected either
 - when a class that asks for injection is registered
 - when an instance of a class asking for injection is requested
 
-To see the difference in terms of implementation, we will implement both techniques.
-- injection based on constructors will be checked early,
-  all dependency classes **must** be present at the registration time.
-- injection based on setters will be checked lately,
-  each dependency class is only checked when the setter that takes that class is called.
-
-Because constructors are checked early, it means that all the dependency of the constructors
-must be already registered **before** the class defining that constructor can be registered.
+The former is better than the later because the configuration error are caught earlier,
+but here, because we want to implement a simple injector, all configuration errors will appear
+late when an instance is requested.
 
 
 ### Configuration
@@ -168,10 +163,6 @@ The unit tests are in [InjectorRegistryTest.java](src/test/java/com/github/forax
    creates an instance.
    Then check that the tests in the nested class "Q6" all pass.
 
-   Note: unlike with setters where the provider is ask when needed, with a constructor,
-   we can verify that the providers of the parameter of the constructor are available
-   before creating any instances. This requires to register the provider class
-   in a reverse topological order guaranteeing that there is no cycle.
 
 
 

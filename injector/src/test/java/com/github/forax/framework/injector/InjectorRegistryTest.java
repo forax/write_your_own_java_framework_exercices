@@ -245,8 +245,24 @@ public class InjectorRegistryTest {
     }
   }
 
+
   @Nested
   public class Q5 {
+    public static class Empty {}
+
+    @Test @Tag("Q5")
+    public void registerProviderClassWithNoSetter() {
+      var registry = new InjectorRegistry();
+      registry.registerProviderClass(Empty.class, Empty.class);
+      var empty1 = registry.lookupInstance(Empty.class);
+      var empty2 = registry.lookupInstance(Empty.class);
+      assertAll(
+          () -> assertNotNull(empty1),
+          () -> assertNotNull(empty2),
+          () -> assertNotSame(empty1, empty2)
+      );
+    }
+
     public static class A {
       private String s;
       private int i;
@@ -400,14 +416,16 @@ public class InjectorRegistryTest {
 
     @Test @Tag("Q6")
     public void registerProviderClassWithAMissingDependency() {
-      record Bar() {}
+      record Bar(int value) {}
       record Foo(Bar bar) {
         @Inject
         public Foo {}
       }
 
       var registry = new InjectorRegistry();
-      assertThrows(IllegalStateException.class, () -> registry.registerProviderClass(Foo.class, Foo.class));
+      registry.registerProviderClass(Foo.class, Foo.class);
+      // no recipe for Bar
+      assertThrows(IllegalStateException.class, () -> registry.lookupInstance(Foo.class));
     }
 
     @Test @Tag("Q6")
