@@ -27,10 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("static-method")
 public class ORMTest {
-
+  /*
   @Nested
   public class Q1 {
-    /*
     @Test @Tag("Q1")
     @SuppressWarnings("resource")
     public void testCurrentConnection() throws SQLException {
