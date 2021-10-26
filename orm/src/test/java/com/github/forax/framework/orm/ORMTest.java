@@ -19,16 +19,18 @@ import java.util.stream.LongStream;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("static-method")
 public class ORMTest {
-  /*
+
   @Nested
   public class Q1 {
-
+    /*
     @Test @Tag("Q1")
     @SuppressWarnings("resource")
     public void testCurrentConnection() throws SQLException {
@@ -43,6 +45,30 @@ public class ORMTest {
     @Test @Tag("Q1")
     @SuppressWarnings("resource")
     public void testCurrentConnectionOutsideATransaction() {
+      assertThrows(IllegalStateException.class, ORM::currentConnection);
+    }
+
+    @Test @Tag("Q1")
+    @SuppressWarnings("resource")
+    public void testTransactionIsNotAvailableAfterTransaction() throws SQLException {
+      var dataSource = new JdbcDataSource();
+      dataSource.setURL("jdbc:h2:mem:test");
+      ORM.transaction(dataSource, () -> {
+        // empty
+      });
+      assertThrows(IllegalStateException.class, ORM::currentConnection);
+    }
+
+    @Test @Tag("Q1")
+    @SuppressWarnings("resource")
+    public void testTransactionIsNotAvailableAfterTransactionWhichEndsWithAnException() throws SQLException {
+      var dataSource = new JdbcDataSource();
+      dataSource.setURL("jdbc:h2:mem:test");
+      assertThrows(SQLException.class, () -> {
+        ORM.transaction(dataSource, () -> {
+          throw new SQLException();
+        });
+      });
       assertThrows(IllegalStateException.class, ORM::currentConnection);
     }
 
@@ -307,15 +333,15 @@ public class ORMTest {
     public Company() { }  // for reflection
 
     public Long getId() {
-        return id;
-      }
+      return id;
+    }
     public String getName() {
-        return name;
-      }
+      return name;
+    }
     @Column("EMPLOYEE_COUNT")
     public int getEmployeeCount() {
-        return employeeCount;
-      }
+      return employeeCount;
+    }
   }
 
   @Nested
@@ -707,8 +733,8 @@ public class ORMTest {
 
         var persons = repository.findAll();
         assertEquals(List.of(
-            new Person(1L, "iga"),
-            new Person(2L, "biva")),
+                new Person(1L, "iga"),
+                new Person(2L, "biva")),
             persons);
       });
     }
@@ -1235,5 +1261,6 @@ public class ORMTest {
       });
     }
 
-  }*/
+  }
+  */
 }
