@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.RandomAccess;
 
 final class Utils {
@@ -13,14 +12,7 @@ final class Utils {
     throw new AssertionError();
   }
 
-  private static final Map<String, Object> DEFAULT_VALUES = Map.of(
-      "Z", false, "B", (byte) 0, "C", '\0', "S", (short) 0, "I", 0, "J", 0L, "F", 0f, "D", 0.);
-
-  public static Object defaultValue(Class<?> type) {
-    return DEFAULT_VALUES.get(type.descriptorString());
-  }
-
-  public static Object invokeMethod(Object object, Method method, Object... args) throws Exception {
+  public static Object invokeMethod(Object object, Method method, Object... args) throws Throwable {
     try {
       return method.invoke(object, args);
     } catch (IllegalArgumentException e) {
