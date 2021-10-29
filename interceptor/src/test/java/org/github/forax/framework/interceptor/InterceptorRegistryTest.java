@@ -1,6 +1,5 @@
 package org.github.forax.framework.interceptor;
 
-import org.github.forax.framework.interceptor.InterceptorRegistryTest.Q7.Example1;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
