@@ -218,7 +218,7 @@ also called a getter and a [write method](https://docs.oracle.com/en/java/javase
 also called a setter.
 
 ```java
-void method(Class<?> type) {
+void method(Class<?> beanType) {
   BeanInfo beanInfo;
   try {
     beanInfo = Introspector.getBeanInfo(beanType);
@@ -229,7 +229,7 @@ void method(Class<?> type) {
   PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
   for(PropertyDescriptor property: properties) {
     String name = property.getName();
-    Class<?> type = property.getType();
+    Class<?> type = property.getPropertyType();
     Method getter = property.getReadMethod();
     Method setter = property.getWriteMethod();
     ...
