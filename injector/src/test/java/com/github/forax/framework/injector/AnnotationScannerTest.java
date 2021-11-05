@@ -1,192 +1,199 @@
 package com.github.forax.framework.injector;
 
-import com.github.forax.framework.injector.scanner.AutoScanned;
-import com.github.forax.framework.injector.scanner.Dependency;
-import com.github.forax.framework.injector.scanner.Dummy;
-import com.github.forax.framework.injector.scanner.OnlyConstructor;
-import com.github.forax.framework.injector.scanner.OnlySetter;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.nio.file.Files;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Objects;
 
-import static java.util.stream.Collectors.toCollection;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("unused")
 public class AnnotationScannerTest {
   /*
   @Nested
   public class Q1 {
-    @Test @Tag("Q1")
-    public void findAllClassesOfInjectorDotScanner() {
-      var classes = AnnotationScanner.findAllClasses(Dummy.class.getPackageName(), Dummy.class.getClassLoader())
-          .collect(toCollection(() -> new TreeSet<>(Comparator.comparing(Class::getName))));
-      assertEquals(Set.of(AutoScanned.class, Dependency.class, Dummy.class, OnlyConstructor.class, OnlySetter.class), classes);
-    }
+    @Test
+    public void test() throws IOException {
+      var folder = Files.createTempDirectory("annotation-scanner");
+      var textPath = Files.writeString(folder.resolve("text.txt"), "this is a text");
+      var javaPath = Files.writeString(folder.resolve("AFakeJava.class"), "this is a fake java class");
+      try {
 
-    @Test @Tag("Q1")
-    public void findAllClassesOfInjector() {
-      var classes = AnnotationScanner.findAllClasses(Utils2.class.getPackageName(), Utils2.class.getClassLoader())
-          .filter(clazz -> !clazz.isMemberClass() && !clazz.isLocalClass() && !clazz.isAnonymousClass())
-          .collect(toCollection(() -> new TreeSet<>(Comparator.comparing(Class::getName))));
-      assertEquals(
-          Set.of(AnnotationScanner.class, Inject.class, InjectorRegistry.class, Utils.class, Utils2.class,
-                 AnnotationScannerTest.class, InjectorRegistryTest.class),
-          classes);
-    }
+        List<String> list;
+        try(var stream = AnnotationScanner.findAllJavaFilesInFolder(folder)) {
+          list = stream.toList();
+        }
+        assertEquals(List.of("AFakeJava"), list);
 
-  }  // end of Q1
+      } finally {
+        Files.delete(javaPath);
+        Files.delete(textPath);
+        Files.delete(folder);
+      }
+    }
+  }   // end of Q1
 
 
   @Nested
   public class Q2 {
-    public static class MemberClass {}
+    static class AnotherClass {}
 
     @Test @Tag("Q2")
-    public void isAProviderClassInvalidClass() {
-      class LocalClass {}
-      var anonymousClass = new Object() {}.getClass();
-
-      assertAll(
-          () -> assertFalse(AnnotationScanner.isAProviderClass(MemberClass.class)),
-          () -> assertFalse(AnnotationScanner.isAProviderClass(LocalClass.class)),
-          () -> assertFalse(AnnotationScanner.isAProviderClass(anonymousClass)),
-          () -> assertFalse(AnnotationScanner.isAProviderClass(List.class)),
-          () -> assertFalse(AnnotationScanner.isAProviderClass(AbstractList.class))
-      );
+    public void findAllClasses() {
+      var packageName = Q2.class.getPackageName();
+      var classLoader = Q2.class.getClassLoader();
+      var list = AnnotationScanner.findAllClasses(packageName, classLoader);
+      assertTrue(list.contains(AnotherClass.class));
     }
 
     @Test @Tag("Q2")
-    public void isAProviderClassNoInject() {
-      assertAll(
-          () -> assertFalse(AnnotationScanner.isAProviderClass(String.class)),
-          () -> assertFalse(AnnotationScanner.isAProviderClass(LocalDate.class)),
-          () -> assertFalse(AnnotationScanner.isAProviderClass(Integer.class)),
-          () -> assertFalse(AnnotationScanner.isAProviderClass(Dependency.class))
-      );
+    public void findAllClassesPrecondition() {
+      var packageName = "a.package.that.do.not.exist";
+      var classLoader = Q2.class.getClassLoader();
+      assertThrows(IllegalStateException.class, () -> AnnotationScanner.findAllClasses(packageName, classLoader));
     }
-
-    @Test @Tag("Q2")
-    public void isAProviderClassInjectOk() {
-      assertAll(
-          () -> assertTrue(AnnotationScanner.isAProviderClass(AutoScanned.class)),
-          () -> assertTrue(AnnotationScanner.isAProviderClass(OnlyConstructor.class)),
-          () -> assertTrue(AnnotationScanner.isAProviderClass(OnlySetter.class))
-      );
-    }
-
-  }  // end of Q2
-
+  }    // end of Q2
 
   @Nested
   public class Q3 {
-
-    @Test @Tag("Q3")
-    public void dependenciesNotProviderClass() {
-      assertAll(
-          () -> assertEquals(List.of(), AnnotationScanner.dependencies(String.class)),
-          () -> assertEquals(List.of(), AnnotationScanner.dependencies(LocalDate.class)),
-          () -> assertEquals(List.of(), AnnotationScanner.dependencies(Integer.class)),
-          () -> assertEquals(List.of(), AnnotationScanner.dependencies(Dependency.class))
-      );
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Hello {
     }
 
     @Test @Tag("Q3")
-    public void dependenciesProviderClass() {
-      assertAll(
-          () -> assertEquals(List.of(Dependency.class), AnnotationScanner.dependencies(AutoScanned.class)),
-          () -> assertEquals(List.of(Dependency.class), AnnotationScanner.dependencies(OnlyConstructor.class)),
-          () -> assertEquals(List.of(), AnnotationScanner.dependencies(OnlySetter.class))
-      );
+    public void addAction() {
+      var scanner = new AnnotationScanner();
+      scanner.addAction(Hello.class, (Class<?> type) -> {});
     }
 
-  }  // end of Q3
+    @Test @Tag("Q3")
+    public void addActionSameAnnotationClassTwice() {
+      var scanner = new AnnotationScanner();
+      scanner.addAction(Hello.class, __ -> {});
+      assertThrows(IllegalStateException.class, () -> scanner.addAction(Hello.class, __ -> {}));
+    }
 
+    @Test @Tag("Q3")
+    public void addActionPrecondition() {
+      var scanner = new AnnotationScanner();
+      assertAll(
+          () -> assertThrows(NullPointerException.class, () -> scanner.addAction(Hello.class, null)),
+          () -> assertThrows(NullPointerException.class, () -> scanner.addAction(null, __ -> {}))
+      );
+    }
+  }    // end of Q3
+
+
+  // Q4
 
   @Nested
   public class Q4 {
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Entity {
+    }
+
+    @Entity
+    static class AnnotatedClass {}
+
     @Test @Tag("Q4")
-    public void findDependenciesInOrderAutoScannedAndOnlyConstructor() {
-      var dependencies = AnnotationScanner.findDependenciesInOrder(List.of(AutoScanned.class, OnlyConstructor.class));
-      assertAll(
-          () -> assertEquals(Set.of(Dependency.class, AutoScanned.class, OnlyConstructor.class), dependencies),
-          () -> assertEquals(List.of(Dependency.class, AutoScanned.class, OnlyConstructor.class), new ArrayList<>(dependencies))
-          );
+    public void scanClassPathPackageForAnnotations() {
+      var scanner  = new AnnotationScanner();
+      scanner.addAction(Entity.class, type -> assertEquals(AnnotatedClass.class, type));
+      scanner.scanClassPathPackageForAnnotations(Q4.class);
+    }
+
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Component {
+    }
+
+    @Component
+    static class Service {
+      public Service() {
+      }
     }
 
     @Test @Tag("Q4")
-    public void findDependenciesInOrderOnlyConstructor() {
-      var dependencies = AnnotationScanner.findDependenciesInOrder(List.of(OnlyConstructor.class));
-      assertAll(
-          () -> assertEquals(Set.of(Dependency.class, OnlyConstructor.class), dependencies),
-          () -> assertEquals(List.of(Dependency.class, OnlyConstructor.class), new ArrayList<>(dependencies))
-      );
+    public void scanAndInjectSimple() {
+      var registry = new InjectorRegistry();
+      var scanner  = new AnnotationScanner();
+      scanner.addAction(Component.class, registry::registerProviderClass);
+      scanner.scanClassPathPackageForAnnotations(Q4.class);
+      var service = registry.lookupInstance(Service.class);
+      assertNotNull(service);
+    }
+
+
+    @Component
+    public static class Dependency { }
+
+    @Component
+    static class ServiceWithDependency {
+      private final Dependency dependency;
+
+      @Inject
+      public ServiceWithDependency(Dependency dependency) {
+        this.dependency = Objects.requireNonNull(dependency);
+      }
+
+      public Dependency getDependency() {
+        return dependency;
+      }
     }
 
     @Test @Tag("Q4")
-    public void findDependenciesInOrderOnlySetter() {
-      var dependencies = AnnotationScanner.findDependenciesInOrder(List.of(OnlySetter.class));
-      assertEquals(Set.of(OnlySetter.class), dependencies);
+    public void scanAndInjectWithDependency() {
+      var registry = new InjectorRegistry();
+      var scanner  = new AnnotationScanner();
+      scanner.addAction(Component.class, registry::registerProviderClass);
+      scanner.scanClassPathPackageForAnnotations(Q4.class);
+      var service = registry.lookupInstance(ServiceWithDependency.class);
+      assertNotNull(service);
+      assertNotNull(service.getDependency());
+    }
+
+
+    public static class NonAnnotatedDependency { }
+
+    @Component
+    static class EntityWithANonAnnotatedDependency {
+      private final NonAnnotatedDependency nonAnnotatedDependency;
+
+      @Inject
+      public EntityWithANonAnnotatedDependency(NonAnnotatedDependency nonAnnotatedDependency) {
+        this.nonAnnotatedDependency = nonAnnotatedDependency;
+      }
+    }
+
+    @Test @Tag("Q4")
+    public void scanAndInjectWithMissingDependency() {
+      var registry = new InjectorRegistry();
+      var scanner  = new AnnotationScanner();
+      scanner.addAction(Component.class, registry::registerProviderClass);
+      scanner.scanClassPathPackageForAnnotations(Q4.class);
+      assertThrows(IllegalStateException.class, () -> registry.lookupInstance(EntityWithANonAnnotatedDependency.class));
+    }
+
+    @Test @Tag("Q4")
+    public void scanClassPathPackageForAnnotationsPrecondition() {
+      var scanner  = new AnnotationScanner();
+      assertThrows(NullPointerException.class, () -> scanner.scanClassPathPackageForAnnotations(null));
     }
 
   }  // end of Q4
-
-
-  @Nested
-  public class Q5 {
-    @Test @Tag("Q5")
-    public void scanPackageForAnnotationsOnlyConstructor() {
-      var registry = new InjectorRegistry();
-      AnnotationScanner.scanClassPathPackageForAnnotations(registry, Dummy.class);
-
-      var onlyConstructor = registry.lookupInstance(OnlyConstructor.class);
-      assertNotNull(onlyConstructor.dependency());
-    }
-
-    @Test @Tag("Q5")
-    public void scanPackageForAnnotationsOnlySetter() {
-      var registry = new InjectorRegistry();
-      AnnotationScanner.scanClassPathPackageForAnnotations(registry, Dummy.class);
-
-      var onlySetter = registry.lookupInstance(OnlySetter.class);
-      assertNotNull(onlySetter.getDependency());
-    }
-
-    @Test @Tag("Q5")
-    public void scanPackageForAnnotationsMixedWithAnInstance() {
-      var registry = new InjectorRegistry();
-      AnnotationScanner.scanClassPathPackageForAnnotations(registry, Dummy.class);
-      registry.registerInstance(String.class, "hello");
-
-      var autoScanned = registry.lookupInstance(AutoScanned.class);
-      assertAll(
-          () -> assertEquals("hello", autoScanned.getText()),
-          () -> assertNotNull(autoScanned.getDependency())
-      );
-    }
-
-    @Test @Tag("Q5")
-    public void scanPackageForAnnotationsPreconditions() {
-      var registry = new InjectorRegistry();
-      assertAll(
-          () -> assertThrows(NullPointerException.class, () -> AnnotationScanner.scanClassPathPackageForAnnotations(null, Dummy.class)),
-          () -> assertThrows(NullPointerException.class, () -> AnnotationScanner.scanClassPathPackageForAnnotations(registry, null))
-      );
-    }
-
-  }  // end of Q5
-  */
+   */
 }

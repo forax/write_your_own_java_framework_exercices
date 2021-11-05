@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Target;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -493,6 +492,58 @@ public class InjectorRegistryTest {
           () -> assertEquals(new Point(0, 0), circle.center),
           () -> assertEquals(new Point(0, 0), circle.point)
       );
+    }
+  }
+
+  @Nested
+  public class Q7 {
+    static class Service {
+      public Service() {
+        // public constructor
+      }
+    }
+
+    @Test @Tag("Q7")
+    public void registerProviderClassOneParameter() {
+      var registry = new InjectorRegistry();
+      registry.registerProviderClass(Service.class);
+      var service = registry.lookupInstance(Service.class);
+      assertNotNull(service);
+    }
+
+    static class Dependency {
+      public Dependency() {
+        // public constructor
+      }
+    }
+
+    static class ServiceWithDependency {
+      private final Dependency dependency;
+
+      @Inject
+      public ServiceWithDependency(Dependency dependency) {
+        this.dependency = dependency;
+      }
+
+      public Dependency getDependency() {
+        return dependency;
+      }
+    }
+
+    @Test @Tag("Q7")
+    public void registerProviderClassOneParameterWithDependency() {
+      var registry = new InjectorRegistry();
+      registry.registerProviderClass(ServiceWithDependency.class);
+      registry.registerProviderClass(Dependency.class);
+      var service = registry.lookupInstance(ServiceWithDependency.class);
+      assertNotNull(service);
+      assertNotNull(service.getDependency());
+    }
+
+    @Test @Tag("Q7")
+    public void registerProviderClassOneParameterPrecondition() {
+      var registry = new InjectorRegistry();
+      assertThrows(NullPointerException.class, () -> registry.registerProviderClass(null));
     }
   }
   */
