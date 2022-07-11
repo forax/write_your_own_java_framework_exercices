@@ -8,10 +8,11 @@ object instances.
 There are two kinds of object relational mapping libraries, depending on if the object world
 is the source of true of the SQL world is the source of true
 - Libraries that maps SQL requests to Java objects,
-  a library like SQLi creates one instance for each row of a query expressed in SQL.
+  a library like [JDBI](https://jdbi.org/) creates one instance for each row of a query expressed in SQL.
   So two different queries on the same table may use two different classes.
 - Libraries that maps Java objects to database table.
-  a library like Hibernate creates multiple instances for each row one by table from a query expressed in SQL.
+  a library like [Hibernate](https://hibernate.org/) creates multiple instances for each row one by table
+  from a query expressed in SQL.
 
 In this exercice, we will implement the first kind, because it's far easier.
 
