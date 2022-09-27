@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="SQLi =&gt; JDBi">
+    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="update POM">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
@@ -190,6 +190,7 @@
     <MESSAGE value="update injector and rewrite annotation scanner" />
     <MESSAGE value="remove one star for the classpath scanning" />
     <MESSAGE value="SQLi =&gt; JDBi" />
-    <option name="LAST_COMMIT_MESSAGE" value="SQLi =&gt; JDBi" />
+    <MESSAGE value="update POM" />
+    <option name="LAST_COMMIT_MESSAGE" value="update POM" />
   </component>
 </project>
