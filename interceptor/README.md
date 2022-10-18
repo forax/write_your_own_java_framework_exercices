@@ -29,7 +29,7 @@ There are more or less two different kind of API to intercept a method call.
   ```
   with `Invocation` a functional interface corresponding to the next interceptor i.e. an interface
   with an abstract method bound to a specific interceptor (partially applied if you prefer).
-  ``java
+  ```java
   @FunctionalInterface
   public interface Invocation {
     Object proceed(Object instance, Method method, Object[] args) throws Throwable;
@@ -105,11 +105,6 @@ Step 1, we create an interceptor registry and add an around advice that checks t
 Step 2, we create a proxy in between the interface and the implementation 
 ```java
     var proxy = registry.createProxy(Hello.class, hello);
-
-    assertAll(
-        () -> assertEquals("hello around advice", proxy.say("hello", "around advice")),
-        () -> assertThrows(NullPointerException.class, () -> proxy.say("hello", null))
-        );
 ```
 
 We can test the proxy with several arguments, null or not
@@ -162,7 +157,7 @@ at each call.
 3. We now want to be support the interceptor API, and for now we will implement it as an addon,
    without changing the support of the around advices.
    Add a method `addInterceptor(annotationClass, interceptor)` and a method
-   `finInterceptors(method)` that respectively add an interceptor for an annotation class and
+   `findInterceptors(method)` that respectively add an interceptor for an annotation class and
    returns a list of all interceptors to call for a method.
    Check that the tests in the nested class "Q3" all pass.
 
