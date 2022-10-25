@@ -242,7 +242,7 @@ ORM.transaction(dataSource, () -> {
    For now, we will implement only the method `findAll()` that returns an empty list 
    For the methods `equals`, `hashCode` and `toString`, we will throw an UnsupportedOperationException
    For all other methods, we will throw a IllegalStateException.
-   Check that the tests in the nested class "Q5" all pass.
+   Check that the tests in the nested class "Q6" all pass.
 
 
 7. In order to finish the implementation `repository.findAll()`, we need several helper methods.
