@@ -4,34 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="fix typo">
-      <change afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
+    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="update to Java 21">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/maven.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/maven.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_h2database_h2_1_4_200.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apiguardian_apiguardian_api_1_1_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_opentest4j_opentest4j_1_2_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/write_your_own_java_framework_exercices.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/write_your_own_java_framework_exercices.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/injector/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/injector/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/injector/injector.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/injector/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/injector/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/InjectorRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/InjectorRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/injector/src/test/java/com/github/forax/framework/injector/InjectorRegistryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/test/java/com/github/forax/framework/injector/InjectorRegistryTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interceptor/interceptor.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/interceptor/src/main/java/org/github/forax/framework/interceptor/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/interceptor/src/main/java/org/github/forax/framework/interceptor/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interceptor/src/test/java/org/github/forax/framework/interceptor/InterceptorRegistryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/interceptor/src/test/java/org/github/forax/framework/interceptor/InterceptorRegistryTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/mapper.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/src/main/java/com/github/forax/framework/mapper/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/src/main/java/com/github/forax/framework/mapper/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/src/test/java/com/github/forax/framework/mapper/JSONWriterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/src/test/java/com/github/forax/framework/mapper/JSONWriterTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orm/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/orm/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orm/orm.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/orm/src/test/java/com/github/forax/framework/orm/ORMTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/orm/src/test/java/com/github/forax/framework/orm/ORMTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,9 +30,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="1z3S0SHERWbIdD5Lf6CT5zlczbJ" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -64,18 +41,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "full.screen.before.presentation.mode": "false",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/Users/forax/git/write_your_own_java_framework_exercices/orm/src/main/java/com/github/forax/framework/orm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/forax/git/write_your_own_java_framework_exercices/orm/src/main/java/com/github/forax/framework/orm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/orm/src/main/java/com/github/forax/framework/orm" />
@@ -199,7 +177,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="update IDEA file" />
     <MESSAGE value="update README.md" />
     <MESSAGE value="add IDEA files" />
     <MESSAGE value="add support of Github action" />
@@ -224,6 +201,7 @@
     <MESSAGE value="fix typos" />
     <MESSAGE value="run CI with Java 19" />
     <MESSAGE value="fix typo" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix typo" />
+    <MESSAGE value="update to Java 21" />
+    <option name="LAST_COMMIT_MESSAGE" value="update to Java 21" />
   </component>
 </project>
