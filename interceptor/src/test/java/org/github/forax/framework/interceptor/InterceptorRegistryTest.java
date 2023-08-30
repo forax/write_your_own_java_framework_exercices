@@ -139,9 +139,9 @@ public class InterceptorRegistryTest {
 //    public void findAdvices() throws NoSuchMethodException {
 //      class EmptyAroundAdvice implements AroundAdvice {
 //        @Override
-//        public void pre(Object instance, Method method, Object[] args) {}
+//        public void before(Object instance, Method method, Object[] args) {}
 //        @Override
-//        public void post(Object instance, Method method, Object[] args, Object result) {}
+//        public void after(Object instance, Method method, Object[] args, Object result) {}
 //      }
 //
 //      var registry = new InterceptorRegistry();
@@ -537,6 +537,9 @@ public class InterceptorRegistryTest {
 
   @Nested
   class Q6 {
+    @Retention(RUNTIME)
+    @interface Example1 {}
+
     @Test @Tag("Q6")
     public void cacheCorrectlyInvalidated() {
       interface Foo {

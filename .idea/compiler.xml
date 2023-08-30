@@ -6,18 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="interceptor" />
-        <module name="mapper" />
-        <module name="orm" />
+        <module name="write_your_own_java_framework_exercices" />
         <module name="injector" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="injector" target="17" />
-      <module name="interceptor" target="17" />
-      <module name="mapper" target="17" />
-      <module name="orm" target="17" />
-      <module name="write_your_own_java_framework_exercices" target="17" />
+      <module name="interceptor" target="19" />
+      <module name="java-framework" target="19" />
+      <module name="mapper" target="19" />
+      <module name="orm" target="19" />
     </bytecodeTargetLevel>
   </component>
 </project>

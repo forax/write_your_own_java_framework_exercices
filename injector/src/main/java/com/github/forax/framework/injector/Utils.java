@@ -6,7 +6,6 @@ import java.beans.Introspector;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.UndeclaredThrowableException;
 
 final class Utils {
   private Utils() {
@@ -29,14 +28,7 @@ final class Utils {
     } catch (IllegalAccessException e) {
       throw (IllegalAccessError) new IllegalAccessError().initCause(e);
     } catch (InvocationTargetException e) {
-      var cause = e.getCause();
-      if (cause instanceof RuntimeException runtimeException) {
-        throw runtimeException;
-      }
-      if (cause instanceof Error error) {
-        throw error;
-      }
-      throw new UndeclaredThrowableException(cause);
+      throw rethrow(e.getCause());
     }
   }
 

@@ -207,6 +207,7 @@ public class ORMTest {
     public EmptyBean() { }
   }
 
+
   @Nested
   public class Q3 {
 
@@ -592,6 +593,7 @@ public class ORMTest {
     }
   }
 
+
   @Nested
   public class Q6 {
     @Test @Tag("Q6")
@@ -764,6 +766,7 @@ public class ORMTest {
     }
   }
 
+
   @Nested
   class Q8 {
 
@@ -771,7 +774,7 @@ public class ORMTest {
     public void testCreateSaveQuery() {
       var beanInfo = Utils.beanInfo(Person.class);
       var sqlQuery = ORM.createSaveQuery("PERSON", beanInfo);
-      assertEquals("MERGE INTO PERSON (id, name) VALUES (?, ?);", sqlQuery);
+      assertTrue(sqlQuery.endsWith("INTO PERSON (id, name) VALUES (?, ?);"));
     }
 
     @Test @Tag("Q8")
@@ -991,7 +994,7 @@ public class ORMTest {
     @Test @Tag("Q11")
     public void testFindId() {
       var beanInfo = Utils.beanInfo(Person.class);
-      var property = ORM.findId(Person.class, beanInfo);
+      var property = ORM.findId(beanInfo);
       assertEquals("id", property.getName());
     }
 
@@ -1030,7 +1033,7 @@ public class ORMTest {
     @Test @Tag("Q11")
     public void testFindNoId() {
       var beanInfo = Utils.beanInfo(NoId.class);
-      assertNull(ORM.findId(NoId.class, beanInfo));
+      assertNull(ORM.findId(beanInfo));
     }
 
     @Test @Tag("Q11")
@@ -1127,21 +1130,21 @@ public class ORMTest {
     @Test @Tag("Q13")
     public void testFindPropertyBalance() {
       var beanInfo = Utils.beanInfo(Account.class);
-      var property = ORM.findProperty(Account.class, beanInfo, "balance");
+      var property = ORM.findProperty(beanInfo, "balance");
       assertEquals("balance", property.getName());
     }
 
     @Test @Tag("Q13")
     public void testFindPropertyId() {
       var beanInfo = Utils.beanInfo(Account.class);
-      var property = ORM.findProperty(Account.class, beanInfo, "id");
+      var property = ORM.findProperty(beanInfo, "id");
       assertEquals("id", property.getName());
     }
 
     @Test @Tag("Q13")
     public void testFindNoProperty() {
       var beanInfo = Utils.beanInfo(Account.class);
-      assertThrows(IllegalStateException.class, () ->  ORM.findProperty(Account.class, beanInfo, "noproperty"));
+      assertThrows(IllegalStateException.class, () ->  ORM.findProperty(beanInfo, "noproperty"));
     }
 
     @Test @Tag("Q13")

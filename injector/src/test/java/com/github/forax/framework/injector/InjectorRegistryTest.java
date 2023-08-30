@@ -96,7 +96,6 @@ public class InjectorRegistryTest {
     }
   }
 
-
   @Nested
   public class Q2 {
     @Test @Tag("Q2")
@@ -108,7 +107,7 @@ public class InjectorRegistryTest {
     }
     //@Test @Tag("Q2")
     //public void shouldNotCompilePreciseSignature() {
-    //  var registry = new Registry();
+    //  var registry = new InjectorRegistry();
     //  registry.registerInstance(String.class, 3);
     //}
   }

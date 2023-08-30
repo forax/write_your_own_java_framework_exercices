@@ -26,11 +26,10 @@ and calls `toJSON()` to get the corresponding JSON text.
 
 ```java
 var writer = new JSONWriter();
-        writer.configure(MonthDay.class,
-        monthDay -> writer.toJSON(monthDay.getMonth() + "-" + monthDay.getDayOfMonth()));
+writer.configure(MonthDay.class, monthDay -> writer.toJSON(monthDay.getMonth() + "-" + monthDay.getDayOfMonth()));
 
-        var person = new Person(MonthDay.of(4, 17), new Address());
-        var json = writer.toJSON(person);  // {"birth-day": "APRIL-17", "address": {"international": false}}
+var person = new Person(MonthDay.of(4, 17), new Address());
+var json = writer.toJSON(person);  // {"birth-day": "APRIL-17", "address": {"international": false}}
 ```
 
 
@@ -40,6 +39,7 @@ The unit tests are in [JSONWriterTest.java](src/test/java/com/github/forax/frame
 
 1. Create the class `JSONWriter` and adds the method `toJSON()` that works only with
    JSON primitive values, `null`, `true`, `false`, any integers or doubles and strings.
+   You can use a switch on type for that.
    Then check that the tests in the nested class "Q1" all pass.
 
 2. Adds the support of [Java Beans](../COMPANION.md#java-bean-and-beaninfo) by modifying `toJSON()` to get the `BeanInfo`.

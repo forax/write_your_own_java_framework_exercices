@@ -11,7 +11,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
+  
   <modules>
     <module>mapper</module>
     <module>injector</module>
@@ -23,13 +23,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.9.0</version>
+      <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.9.0</version>
+      <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -44,19 +44,19 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.11.0</version>
         <configuration>
           <enablePreview>true</enablePreview>
-          <release>19</release>
-          <source>19</source>
-          <target>19</target>
+          <release>21</release>
+          <source>21</source>
+          <target>21</target>
         </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M7</version>
+        <version>3.1.2</version>
         <configuration>
           <argLine>--enable-preview</argLine>
         </configuration>
