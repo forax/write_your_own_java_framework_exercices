@@ -47,9 +47,9 @@
         <version>3.11.0</version>
         <configuration>
           <enablePreview>true</enablePreview>
-          <release>21</release>
-          <source>21</source>
-          <target>21</target>
+          <release>20</release>
+          <source>20</source>
+          <target>20</target>
         </configuration>
       </plugin>
 
