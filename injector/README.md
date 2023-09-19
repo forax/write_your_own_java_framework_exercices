@@ -1,200 +1,170 @@
-# Interceptor
+# Dependency Injection
 
-An interceptor is a function that is called before/after a method call to react to the arguments or return value
-of that method call. To select which interceptor will be run on which method call, we register
-an interceptor with an annotation class and all methods annotated with an annotation of that class will be
-intercepted by this interceptor.
-
-## Advice and interceptor
-
-There are more or less two different kind of API to intercept a method call.
-- the around advice, an interface with two methods, `before` and `after`that are respectively called
-  before and after a call.
-  ```java
-  public interface AroundAdvice {
-    void before(Object instance, Method method, Object[] args) throws Throwable;
-    void after(Object instance, Method method, Object[] args, Object result) throws Throwable;
-  }
-  ```
-  The `instance` is the object on which the method is be called, `method` is the method called,
-  `args` are the arguments of the call (or `null` is there is no argument).
-  The last parameter of the method `after`, `result` is the returned value of the method call.
-
-- one single method that takes as last parameter a way to call the next interceptor
-  ```java
-  @FunctionalInterface
-  public interface Interceptor {
-    Object intercept(Method method, Object proxy, Object[] args, Invocation invocation) throws Throwable;
-  }
-  ```
-  with `Invocation` a functional interface corresponding to the next interceptor i.e. an interface
-  with an abstract method bound to a specific interceptor (partially applied if you prefer).
-  ``java
-  @FunctionalInterface
-  public interface Invocation {
-    Object proceed(Object instance, Method method, Object[] args) throws Throwable;
-  }
-  ```
-
-The interceptor API is more powerful and can be used to simulate the around advice API.
+An `InjectorRegistry` is a class able to provide instances of classes from recipes of object creation.
+There are two ways to get such instances either explicitly using `lookupInstance(type)` or
+implicitly on constructors or setters annotated by the annotation `@Inject`.
 
 
-## Interceptors and/or Aspect Oriented Programming
+### Protocols of injection
 
-The interface we are implementing here, is very similar to
-[Spring method interceptor](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/aopalliance/intercept/MethodInterceptor.html),
-[CDI interceptor](https://docs.oracle.com/javaee/6/tutorial/doc/gkhjx.html) or
-[Guice interceptor](https://www.baeldung.com/guice).
+Usual injection framework like [Guice](https://github.com/google/guice),
+[Spring](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-dependencies)
+or [CDI/Weld](https://docs.oracle.com/javaee/6/tutorial/doc/giwhb.html)
+provides 3 ways to implicitly get an instance of a class
+- constructor based dependency injection, the constructor annotated with
+  [@Inject](https://javax-inject.github.io/javax-inject/)
+  is called with the instances as arguments, it's considered as the best way to get a dependency
+- setter based dependency injection, after a call to the default constructor, the setters are called.
+  The main drawback is that the setters can be called in any order (the order may depend on
+  the version of the compiler/VM used)
+- field based dependency injection, after a call to the default constructor, the fields are filled with the instances,
+  this methods bypass the default security model of Java using **deep reflection**, relying on either
+  not having a module declared or the package being open in the module-info.java. Because of that,
+  this is not the recommended way of doing injection.
 
-All of them are using the same API provided by the
-[Aspect Oriented Programming Alliance](http://aopalliance.sourceforge.net/)
-which is a group created to define a common API for interceptors in Java.
-Compared to the API we are about to implement, the AOP Alliance API encapsulates the parameters
-(instance, method, args, link to the next interceptor) inside the interface `MethodInvocation`.
-
-[Aspect Oriented Programming, AOP](https://en.wikipedia.org/wiki/Aspect-oriented_programming) is a more general
-conceptual framework from the beginning of 2000s, an interceptor is equivalent to the around advice.
+We will only implement the constructor based and setter based dependency injection.
 
 
-## An example
+### Early vs Late checking
 
-The API works in two steps, first register an advice (or an interceptor) for an annotation,
-then creates a proxy of an interface. When a method of the proxy is called through the interface,
-if the method is annotated, the corresponding advices/interceptors will be called. 
+When injecting instances, an error can occur if the `InjectorRegistry` has no recipe to create
+an instance of a class. Depending on the implementation of the injector, the error can be
+detected either
+- when a class that asks for injection is registered
+- when an instance of a class asking for injection is requested
 
-For example, if we want to implement an advice that will check that the arguments of a method are not null.
-First we need to define an annotation
+The former is better than the later because the configuration error are caught earlier,
+but here, because we want to implement a simple injector, all configuration errors will appear
+late when an instance is requested.
+
+
+### Configuration
+
+There are several ways to configure an injector, it can be done
+- using an XML file, this the historical way (circa 2000-2005) to do the configuration.
+- using classpath/modulepath scanning. All the classes of the application are scanned and classes with
+  annotated members are added to the injector. The drawback of this method is that this kind of scanning
+  is quite slow, slowing down the startup time of the application.
+  Recent frameworks like Quarkus or Spring Native move the annotation discovery at compile time using
+  an annotation processor to alleviate that issue.
+- using an API to explicitly register the recipe to get the dependency.
+
+We will implement the explicit API while the classpath scanning is implemented in [the part 2](README2.md).
+
+
+### Our injector
+
+The class `InjectorRegistry` has 4 methods
+- `lookupInstance(type)` which returns an instance of a type using a recipe previously registered
+- `registerInstance(type, object)` register the only instance (singleton) to always return for a type
+- `registerProvider(type, supplier)` register a supplier to call to get the instance for a type
+- `registerProviderClass(type, class)` register a bean class that will be instantiated for a type
+
+As an example, suppose we have a record `Point` and a bean `Circle` with a constructor `Circle` annotated
+with `@Inject` and a setter `setName` of `String` also annotated with `@Inject`.
 
 ```java
-@Retention(RUNTIME)
-@Target(METHOD)
-@interface CheckNotNull { }
-```
+record Point(int x, int y) {}
 
-If we want to check the argument of a method of an interface, we need to annotate it with `@CheckNotNull`
-```java
-interface Hello {
-  @CheckNotNull String say(String message, String name);
+class Circle {
+  private final Point center;
+  private String name;
+
+  @Inject
+  public Circle(Point center) {
+    this.center = center;
+  }
+
+  @Inject
+  public void setName(String name) {
+    this.name = name;
+  }
 }
 ```
 
-We also have an implementation of that interface, that provides the behavior the user want
+We can register the `Point(0, 0)` as the instance that will always be returned when an instance of `Point` is requested.
+We can register a `Supplier` (here, one that always return "hello") when an instance of `String` is requested.
+We can register a class `Circle.class` (the second parameter), that will be instantiated when an instance of `Circle`
+is requested.
+
 ```java
-class HelloImpl implements Hello {
-   @Override
-   public String say(String message, String name) {
-      return message + " " + name;
-   }
-}
+var registry = new InjectorRegistry();
+registry.registerInstance(Point.class, new Point(0, 0));
+registry.registerProvider(String.class, () -> "hello");
+registry.registerProviderClass(Circle.class, Circle.class);
+
+var circle = registry.lookupInstance(Circle.class);
+System.out.println(circle.center);  // Point(0, 0)
+System.out.println(circle.name);  // hello    
 ```
-
-Step 1, we create an interceptor registry and add an around advice that checks that the arguments are not null
-```java
-    var registry = new InterceptorRegistry();
-    registry.addAroundAdvice(CheckNotNull.class, new AroundAdvice() {
-      @Override
-      public void before(Object delegate, Method method, Object[] args) {
-        Arrays.stream(args).forEach(Objects::requireNonNull);
-      }
-
-      @Override
-      public void after(Object delegate, Method method, Object[] args, Object result) {}
-    });
-```
-
-Step 2, we create a proxy in between the interface and the implementation 
-```java
-    var proxy = registry.createProxy(Hello.class, hello);
-
-    assertAll(
-        () -> assertEquals("hello around advice", proxy.say("hello", "around advice")),
-        () -> assertThrows(NullPointerException.class, () -> proxy.say("hello", null))
-        );
-```
-
-We can test the proxy with several arguments, null or not
-```java
-    assertAll(
-        () -> assertEquals("hello around advice", proxy.say("hello", "around advice")),
-        () -> assertThrows(NullPointerException.class, () -> proxy.say("hello", null))
-        );
-```
-
-
-## The interceptor registry
-
-An `InterceptorRegistry` is a class that manage the interceptors, it defines three public methods
-- `addAroundAdvice(annotationClass, aroundAdvice)` register an around advice for an annotation
-- `addInterceptor(annotationClass, interceptor)` register an interceptor for an annotation
-- `createProxy(interfaceType, instance)` create a proxy that for each annotated methods will call
-   the advices/interceptors before calling the method on the instance.
-
 
 
 ## Let's implement it
 
-The idea is to gradually implement the class `InterceptorRegistry`, first by implementing the support
-for around advice then add the support of interceptor and retrofit around advices to be implemented
-as interceptors. To finish, add a cache avoiding recomputing of the linked list of invocations
-at each call.
+The unit tests are in [InjectorRegistryTest.java](src/test/java/com/github/forax/framework/injector/InjectorRegistryTest.java)
+
+1. Create a class `InjectorRegistry` and add the methods `registerInstance(type, instance)` and
+   `lookupInstance(type)` that respectively registers an instance into a `Map` and retrieves an instance for
+   a type. `registerInstance(type, instance)` should allow registering only one instance per type and
+   `lookupInstance(type)` should throw an exception if no instance have been registered for a type.
+   Then check that the tests in the nested class "Q1" all pass.
+
+   Note: for now, the instance does not have to be an instance of the type `type`.
+   You can use [Map.putIfAbsent()](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html#putIfAbsent(K,V))
+   to detect if there is already a pair/entry with the same key in the `Map` in one call.
 
 
-1. Create a class `InterceptorRegistry` with two public methods
-   - a method `addAroundAdvice(annotationClass, aroundAdvice)` that for now do not care about the
-   `annotationClass` and store the advice in a field.
-   - a method `createProxy(type, delegate)` that creates a [dynamic proxy](../COMPANION.md#dynamic-proxy)
-     implementing the interface and calls the method `before` and `after` of the around advice
-     (if one is defined) around the call of each method using `Utils.invokeMethod()`.
-   Check that the tests in the nested class "Q1" all pass.
+2. We want to enforce that the instance has to be an instance of the type taken as parameter.
+   For that, declare a `T` and say that the type of the `Class`and the type of the instance is the same.
+   Then use the same trick for `lookupInstance(type)` and check that the tests in the nested class "Q2" all pass.
+
+   Note: inside `lookupInstance(type)`, now that we now that the instance we return has to be
+   an instance of the type, we can use
+   [Class.cast()](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html#cast(java.lang.Object))
+   to avoid an unsafe cast.
+
+
+3. We now want to add the method `registerProvider(type, supplier)` that register a supplier (a function with
+   no parameter that return a value) that will be called each time an instance is requested.
+   An astute reader can remark that a supplier can always return the same instance thus we do not need two `Map`s,
+   but only one that stores suppliers.
+   Add the method `registerProvider(type, supplier)` and modify your implementation to support it.
+   Then check that the tests in the nested class "Q3" all pass.
+
+
+4. In order to implement the injection using setters, we need to find all the
+   [Bean properties](../COMPANION.md#java-bean-and-beaninfo)
+   that have a setter [annotated](../COMPANION.md#methodisannotationpresent-methodgetannotation-methodgetannotations)
+   with `@Inject`.
+   Write a helper method `findInjectableProperties(class)` that takes a class as parameter and returns a list of
+   all properties (`PropertyDescriptor`) that have a setter annotated with `@Inject`.
+   Then check that the tests in the nested class "Q4" all pass.
+
+   Note: The class `Utils` already defines a method `beanInfo()`.
+
+
+5. We want to add a method `registerProviderClass(type, providerClass)` that takes a type and a class,
+   the `providerClass` implementing that type and register a recipe that create a new instance of
+   `providerClass` by calling the default constructor. This instance is initialized by calling all the
+   setters annotated with `@Inject` with an instance of the corresponding property type
+   (obtained by calling `lookupInstance`).
+   Write the method `registerProviderClass(type, providerClass)` and
+   check that the tests in the nested class "Q5" all pass.
+
+   Note: The class `Utils` defines the methods `defaultConstructor()`, `newInstance()` and `invokeMethod()`.
+
+
+6. We want to add the support of constructor injection.
+   The idea is that either only one of the
+   [public constructors](../COMPANION.md#classgetmethod-classgetmethods-classgetconstructors)
+   of the `providerClass` is annotated with `@Inject` or a public default constructor
+   (a constructor with no parameter) should exist.
+   Modify the code that instantiate the `providerClass` to use that constructor to
+   creates an instance.
+   Then check that the tests in the nested class "Q6" all pass.
+
+
+7. To finish, we want to add a user-friendly overload of `registerProviderClass`,
+   `registerProviderClass(providerClass)` that takes only a `providerClass`
+   and is equivalent to `registerProviderClass(providerClass, providerClass)`.
    
-
-2. Change the implementation of `addAroundAdvice` to store all advices by annotation class.
-   And add a package private instance method `findAdvices(method)` that takes a `java.lang.reflect.Method` as
-   parameter and returns a list of all advices that should be called.
-   An around advice is called for a method if that method is annotated with an annotation of
-   the annotation class on which the advice is registered.
-   The idea is to gather [all annotations](../COMPANION.md#annotation) of that method
-   and find all corresponding advices.
-   Once the method `findAdvices` works, modify the method `createProxy`to use it.
-   Check that the tests in the nested class "Q2" all pass.
-
-
-3. We now want to be support the interceptor API, and for now we will implement it as an addon,
-   without changing the support of the around advices.
-   Add a method `addInterceptor(annotationClass, interceptor)` and a method
-   `finInterceptors(method)` that respectively add an interceptor for an annotation class and
-   returns a list of all interceptors to call for a method.
-   Check that the tests in the nested class "Q3" all pass.
-
-
-4. We want to add a method `getInvocation(interceptorList)` that takes a list of interceptors
-   as parameter and returns an Invocation which when it is called will call the first interceptor
-   with as last argument an Invocation allowing to call the second interceptor, etc.
-   The last invocation will call the method on the instance with the arguments.
-   Because each Invocation need to know the next Invocation, the chained list of Invocation
-   need to be constructed from the last one to the first one.
-   To loop over the interceptors in reverse order, you can use the method `List.reversed()`
-   which return a reversed list without moving the elements of the initial list.
-   Add the method `getInvocation`.
-   Check that the tests in the nested class "Q4" all pass.
-
-
-5. We know want to change the implementation to only uses interceptor internally
-   and rewrite the method `addAroundAdvice` to use an interceptor that will calls
-   the around advice.
-   Change the implementation of `addAroundAdvice` to use an interceptor, and modify the
-   code of `createProxy` to use interceptors instead of advices.
-   Check that the tests in the nested class "Q5" all pass.
-   Note: given that the method `findAdvices` is now useless, the test Q2.findAdvices() should be commented.
-
-   
-6. Add a cache avoiding recomputing a new `Invocation` each time a method is called.
-   When the cache should be invalidated ? Change the code to invalidate the cache when necessary.
-   Check that the tests in the nested class "Q6" all pass.
-
-
-7. We currently support only annotations on methods, we want to be able to intercept methods if the annotation
-   is not only declared on that method but on the declaring interface of that method or on one of the parameter
-   of that method.
-   Modify the method `findInterceptors(method)`.
-   Check that the tests in the nested class "Q7" all pass.
