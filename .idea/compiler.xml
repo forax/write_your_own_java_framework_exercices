@@ -13,4 +13,13 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="injector" options="--enable-preview" />
+      <module name="interceptor" options="--enable-preview" />
+      <module name="java-framework" options="--enable-preview" />
+      <module name="mapper" options="--enable-preview" />
+      <module name="orm" options="--enable-preview" />
+    </option>
+  </component>
 </project>
