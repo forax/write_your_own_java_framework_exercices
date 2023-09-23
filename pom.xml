@@ -49,9 +49,9 @@
           <compilerArgs>
             <compilerArg>--enable-preview</compilerArg>
           </compilerArgs>
-          <release>20</release>
-          <source>20</source>
-          <target>20</target>
+          <release>21</release>
+          <source>21</source>
+          <target>21</target>
         </configuration>
       </plugin>
 
