@@ -105,6 +105,11 @@ Step 1, we create an interceptor registry and add an around advice that checks t
 Step 2, we create a proxy in between the interface and the implementation 
 ```java
     var proxy = registry.createProxy(Hello.class, hello);
+
+    assertAll(
+        () -> assertEquals("hello around advice", proxy.say("hello", "around advice")),
+        () -> assertThrows(NullPointerException.class, () -> proxy.say("hello", null))
+        );
 ```
 
 We can test the proxy with several arguments, null or not
@@ -168,7 +173,7 @@ at each call.
    The last invocation will call the method on the instance with the arguments.
    Because each Invocation need to know the next Invocation, the chained list of Invocation
    need to be constructed from the last one to the first one.
-   To loop over the interceptors in reverse order, you can use the method `Utils.reverseList(list)`
+   To loop over the interceptors in reverse order, you can use the method `List.reversed()`
    which return a reversed list without moving the elements of the initial list.
    Add the method `getInvocation`.
    Check that the tests in the nested class "Q4" all pass.
