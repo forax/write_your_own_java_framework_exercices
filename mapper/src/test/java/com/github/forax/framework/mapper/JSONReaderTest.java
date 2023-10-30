@@ -16,6 +16,7 @@ import java.util.StringJoiner;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,6 +64,7 @@ public class JSONReaderTest {
         }
         """, SimpleBean.class);
       assertEquals("Bob", bean.name);
+      assertEquals(0, bean.age);
     }
 
     @Test @Tag("Q1")
@@ -72,6 +74,7 @@ public class JSONReaderTest {
         {}
         """, SimpleBean.class);
       assertNull(bean.name);
+      assertEquals(0, bean.age);
     }
 
     @SuppressWarnings("unused")
@@ -145,7 +148,7 @@ public class JSONReaderTest {
         }
         """, SimpleBean.class);
       });
-      assertTrue(exception.getCause() instanceof IllegalStateException);
+      assertInstanceOf(IllegalStateException.class, exception.getCause());
     }
 
     @Test @Tag("Q1")
@@ -158,6 +161,7 @@ public class JSONReaderTest {
     }
 
   }  // end of Q1
+
 
   @Nested
   public class Q2 {
@@ -192,6 +196,20 @@ public class JSONReaderTest {
       assertEquals("75001", person.address.zipCode);
     }
 
+    @Test @Tag("Q2")
+    public void parseJSONRecursiveInvalidKey() {
+      var reader = new JSONReader();
+      assertThrows(IllegalStateException.class, () -> {
+            reader.parseJSON("""
+                {
+                  "invalidAddress": {
+                    "zipCode": "75001"
+                  }
+                }
+                """, Person.class);
+          });
+    }
+
   }  // end of Q2
 
 
@@ -212,12 +230,12 @@ public class JSONReaderTest {
     }
 
     @Test @Tag("Q3")
-    public void collectorBean() {
-      var collector = JSONReader.Collector.bean(Person.class);
-      var bean = collector.supplier().get();
-      collector.populater().populate(bean, "name", "Bob");
-      collector.populater().populate(bean, "age", 29);
-      var person = (Person) collector.finisher().apply(bean);
+    public void objectBuilderBean() {
+      JSONReader.ObjectBuilder<Object> objectBuilder = JSONReader.ObjectBuilder.bean(Person.class);
+      var bean = objectBuilder.supplier().get();
+      objectBuilder.populater().populate(bean, "name", "Bob");
+      objectBuilder.populater().populate(bean, "age", 29);
+      var person = (Person) objectBuilder.finisher().apply(bean);
 
       assertAll(
           () -> assertEquals("Bob", person.name),
@@ -226,23 +244,24 @@ public class JSONReaderTest {
     }
 
     @Test @Tag("Q3")
-    public void collectorBeanQualifierType() {
-      var collector = JSONReader.Collector.bean(Person.class);
+    public void objectBuilderBeanTypeProvider() {
+      var objectBuilder = JSONReader.ObjectBuilder.bean(Person.class);
       assertAll(
-          () -> assertEquals(String.class, collector.qualifier().apply("name")),
-          () -> assertEquals(int.class, collector.qualifier().apply("age"))
+          () -> assertEquals(String.class, objectBuilder.typeProvider().apply("name")),
+          () -> assertEquals(int.class, objectBuilder.typeProvider().apply("age"))
       );
     }
 
     @Test @Tag("Q3")
-    public void collectorBeanPreconditions() {
-      assertThrows(NullPointerException.class, () -> JSONReader.Collector.bean(null));
+    public void objectBuilderBeanPreconditions() {
+      assertThrows(NullPointerException.class, () -> JSONReader.ObjectBuilder.bean(null));
     }
 
   }  // end of Q3
 
 
-  @Nested class Q4 {
+  @Nested
+  class Q4 {
     @Test @Tag("Q4")
     public void parseJSONTypePrecondition() {
       var reader = new JSONReader();
@@ -258,9 +277,9 @@ public class JSONReaderTest {
     }
 
     @Test @Tag("Q4")
-    public void collectorBeanQualifierPreciseType() {
-      var collector = JSONReader.Collector.bean(PreciseTypeBean.class);
-      var type = collector.qualifier().apply("foo");
+    public void objectBuilderBeanQualifierPreciseType() {
+      var objectBuilder = JSONReader.ObjectBuilder.bean(PreciseTypeBean.class);
+      var type = objectBuilder.typeProvider().apply("foo");
       assertAll(
           () -> assertNotEquals(List.class, type),
           () -> assertEquals(List.class, ((ParameterizedType) type).getRawType()),
@@ -271,16 +290,17 @@ public class JSONReaderTest {
   }  // end of Q4
 
 
+
   @Nested
   public class Q5 {
     @Test @Tag("Q5")
-    public void collectorListOfStrings() {
-      var collector = JSONReader.Collector.list(String.class);
-      var list = collector.supplier().get();
-      collector.populater().populate(list, null, "Bob");
-      collector.populater().populate(list, null, "Ana");
+    public void objectBuilderListOfStrings() {
+      JSONReader.ObjectBuilder<List<Object>> objectBuilder = JSONReader.ObjectBuilder.list(String.class);
+      var list = objectBuilder.supplier().get();
+      objectBuilder.populater().populate(list, null, "Bob");
+      objectBuilder.populater().populate(list, null, "Ana");
       @SuppressWarnings("unchecked")
-      var unmodifiableList = (List<String>) (List<?>) collector.finisher().apply(list);
+      var unmodifiableList = (List<Object>) objectBuilder.finisher().apply(list);
 
       assertAll(
           () -> assertEquals(List.of("Bob", "Ana"), list),
@@ -290,13 +310,13 @@ public class JSONReaderTest {
     }
 
     @Test @Tag("Q5")
-    public void collectorListOfIntegers() {
-      var collector = JSONReader.Collector.list(Integer.class);
-      var list = collector.supplier().get();
-      collector.populater().populate(list, null, 42);
-      collector.populater().populate(list, null, 856);
+    public void objectBuilderListOfIntegers() {
+      var objectBuilder = JSONReader.ObjectBuilder.list(Integer.class);
+      var list = objectBuilder.supplier().get();
+      objectBuilder.populater().populate(list, null, 42);
+      objectBuilder.populater().populate(list, null, 856);
       @SuppressWarnings("unchecked")
-      var unmodifiableList = (List<Integer>) (List<?>) collector.finisher().apply(list);
+      var unmodifiableList = (List<Object>) objectBuilder.finisher().apply(list);
 
       assertAll(
           () -> assertEquals(List.of(42, 856), list),
@@ -306,14 +326,14 @@ public class JSONReaderTest {
     }
 
     @Test @Tag("Q5")
-    public void collectorListQualifierType() {
-      var collector = JSONReader.Collector.list(Integer.class);
-      assertEquals(Integer.class, collector.qualifier().apply(null));
+    public void objectBuilderListQualifierType() {
+      var objectBuilder = JSONReader.ObjectBuilder.list(Integer.class);
+      assertEquals(Integer.class, objectBuilder.typeProvider().apply(null));
     }
 
     @Test @Tag("Q5")
-    public void collectorListPreconditions() {
-      assertThrows(NullPointerException.class, () -> JSONReader.Collector.list(null));
+    public void objectBuilderListPreconditions() {
+      assertThrows(NullPointerException.class, () -> JSONReader.ObjectBuilder.list(null));
     }
 
     public static class IntArrayBean {
@@ -328,7 +348,7 @@ public class JSONReaderTest {
       return type -> Optional.of(type)
           .flatMap(t -> t instanceof ParameterizedType parameterizedType? Optional.of(parameterizedType): Optional.empty())
           .filter(t -> t.getRawType() == List.class)
-          .map(t -> JSONReader.Collector.list(t.getActualTypeArguments()[0]));
+          .map(t -> JSONReader.ObjectBuilder.list(t.getActualTypeArguments()[0]));
     }
 
     @Test @Tag("Q5")
@@ -358,9 +378,9 @@ public class JSONReaderTest {
     }
 
     @Test @Tag("Q5")
-    public void parseJSONWithAUserDefinedCollector() {
+    public void parseJSONWithAUserDefinedObjectBuilder() {
       var reader = new JSONReader();
-      reader.addTypeMatcher(type -> Optional.of(new JSONReader.Collector<>(
+      reader.addTypeMatcher(type -> Optional.of(new JSONReader.ObjectBuilder<>(
           key -> String.class,
           () -> new StringJoiner(", ", "{", "}"),
           (joiner, key, value) -> joiner.add(key + "=" + value.toString()),
@@ -438,15 +458,14 @@ public class JSONReaderTest {
       return type -> Optional.of(type)
           .flatMap(t -> t instanceof ParameterizedType parameterizedType? Optional.of(parameterizedType): Optional.empty())
           .filter(t -> t.getRawType() == List.class)
-          .map(t -> JSONReader.Collector.list(t.getActualTypeArguments()[0]));
+          .map(t -> JSONReader.ObjectBuilder.list(t.getActualTypeArguments()[0]));
     }
 
     @Test @Tag("Q6")
     public void parseJSONTypeReference() {
       var reader = new JSONReader();
       reader.addTypeMatcher(listTypeMatcher());
-      @SuppressWarnings("unchecked")
-      var list = (List<Integer>) reader.parseJSON("""
+      var list = reader.parseJSON("""
           [
             1, 5, 78, 4
           ]
@@ -466,6 +485,7 @@ public class JSONReaderTest {
   }  // end of Q6
 
 
+
   @Nested
   public class Q7 {
 
@@ -473,18 +493,18 @@ public class JSONReaderTest {
       return type -> Optional.of(type)
           .flatMap(t -> t instanceof ParameterizedType parameterizedType? Optional.of(parameterizedType): Optional.empty())
           .filter(t -> t.getRawType() == List.class)
-          .map(t -> JSONReader.Collector.list(t.getActualTypeArguments()[0]));
+          .map(t -> JSONReader.ObjectBuilder.list(t.getActualTypeArguments()[0]));
     }
 
     public record Person(String name, int age) { }
 
     @Test @Tag("Q7")
-    public void collectorRecord() {
-      var collector = JSONReader.Collector.record(Person.class);
-      var array = collector.supplier().get();
-      collector.populater().populate(array, "name", "Bob");
-      collector.populater().populate(array, "age", 29);
-      var person = (Person) collector.finisher().apply(array);
+    public void objectBuilderRecord() {
+      var objectBuilder = JSONReader.ObjectBuilder.record(Person.class);
+      var array = objectBuilder.supplier().get();
+      objectBuilder.populater().populate(array, "name", "Bob");
+      objectBuilder.populater().populate(array, "age", 29);
+      var person = (Person) objectBuilder.finisher().apply(array);
 
       assertAll(
           () -> assertEquals("Bob", person.name),
@@ -493,17 +513,17 @@ public class JSONReaderTest {
     }
 
     @Test @Tag("Q7")
-    public void collectorRecordQualifierType() {
-      var collector = JSONReader.Collector.record(Person.class);
+    public void objectBuilderRecordTypeProvider() {
+      var objectBuilder = JSONReader.ObjectBuilder.record(Person.class);
       assertAll(
-          () -> assertEquals(String.class, collector.qualifier().apply("name")),
-          () -> assertEquals(int.class, collector.qualifier().apply("age"))
+          () -> assertEquals(String.class, objectBuilder.typeProvider().apply("name")),
+          () -> assertEquals(int.class, objectBuilder.typeProvider().apply("age"))
       );
     }
 
     @Test @Tag("Q7")
-    public void collectorRecordPreconditions() {
-      assertThrows(NullPointerException.class, () -> JSONReader.Collector.record(null));
+    public void objectBuilderRecordPreconditions() {
+      assertThrows(NullPointerException.class, () -> JSONReader.ObjectBuilder.record(null));
     }
 
     public record IntArrayBean(List<Integer> values) { }
@@ -512,7 +532,7 @@ public class JSONReaderTest {
     public void parseJSONWithABeanAndAList() {
       var reader = new JSONReader();
       reader.addTypeMatcher(listTypeMatcher());
-      reader.addTypeMatcher(type -> Optional.of(Utils.erase(type)).filter(Class::isRecord).map(JSONReader.Collector::record));
+      reader.addTypeMatcher(type -> Optional.of(Utils.erase(type)).filter(Class::isRecord).map(JSONReader.ObjectBuilder::record));
       var bean = reader.parseJSON("""
         {
           "values": [ 12, "foo", 45.2 ]
@@ -528,7 +548,7 @@ public class JSONReaderTest {
       }
 
       var reader = new JSONReader();
-      reader.addTypeMatcher(type -> Optional.of(Utils.erase(type)).filter(Class::isRecord).map(JSONReader.Collector::record));
+      reader.addTypeMatcher(type -> Optional.of(Utils.erase(type)).filter(Class::isRecord).map(JSONReader.ObjectBuilder::record));
       var person = reader.parseJSON("""
         {
           "name": "Ana", "age": 24
@@ -538,5 +558,5 @@ public class JSONReaderTest {
     }
 
   }  // end of Q7
- */
+  */
 }

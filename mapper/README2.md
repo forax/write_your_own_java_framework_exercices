@@ -9,12 +9,12 @@ Then we call `parseJSON(text, type)` with a JSON text, and a type that will be u
 
 Here is an example using a record
 ```java
-public record Person(String name, int age) {}
+record Person(String name, int age) {}
 
 var reader = new JSONReader();
 reader.addTypeMatcher(type -> Optional.of(Utils.erase(type))
     .filter(Class::isRecord)
-    .map(Collector::record));
+    .map(ObjectBuilder::record));
 var person = reader.parseJSON("""
     {
       "name": "Ana", "age": 24
@@ -24,13 +24,14 @@ assertEquals(new Person("Ana", 24), person);
 ```
 
 In the code above, the `TypeMatcher` recognizes the type that can be erased as records and provides a
-specific `Collector` named `Collector.record(recordClass)` which decodes records.
+specific `ObjectBuilder` named `ObjectBuilder.record(recordClass)` which decodes records.
 
 
 ### Class vs Type
 
-In order to be able to know decode a JSON array of JSON object, we can not use `java.lang.Class`
-to represent the type of the JSON element, we will use a `java.lang.reflect.Type` for that. 
+To decode a JSON array, we want to decode types like `List<Person>`.
+This type is not representable as a `java.lang.Class` (the corresponding class  is only `List`
+which is missing the type of the JSON element). So we will use `java.lang.reflect.Type` instead.
 See [](../COMPANION.md#java-compiler-generics-attributes) for mode info.
 
 
@@ -97,27 +98,29 @@ For example, for the JSON object `{ "kevin": true, "data": [1, 2] }`, the visito
 and `endObject(null)`.
 
 
-### Collector
+### ObjectBuilder
 
-A `JSONReader` uses two abstractions, one called a Collector (because it's behavior is close to a
-[Stream Collector](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/stream/Collector.html)).
-A collector abstract the way to create an object, fill it with values and transform it to another object
-before returning it. In order to propagate the type, it also has a function that return the type of a `key`
+A `JSONReader` needs a way to create an empty object/list, to populate it with the values and then return it.
+To represent those operations, we are using an abstract type named `ObjectBuiler`.
+Unlike a mutable builder that would store the intermediary object inside itself, here we are using
+a pure functional representation similar to the Collector class of Java.
 
-A collector is composed of 4 functions
-- a *qualifier* that returns the `Type` of a key `(key) -> Type`
+An object builder abstract the way to create an object/list using a supplier.
+The value are inserted into the object using a populater.
+At the end, the object is transformed to another one (maybe non-mutable) using a finisher.
+In order to propagate the type, it also has a qualifier, a function that return the type of a `key`
+
+An object builder is composed of 4 functions
+- a *typeProvider* that returns the `Type` of a key `(key) -> Type`
 - a *supplier* that creates a data `() -> data`
 - a *populater* that inserts the key / value into the data `(data, key, value) -> void`
 - a *finisher* that transform the data into an object `(data) -> Object`
 
-The *finisher* can be used to make the data immutable by example.
-
-
 ### TypeMatcher
 
-Now that we have a collector, we need to answer to the question, which collector to associate to
+Now that we have an object builder, we need to answer to the question, which object builder to associate to
 a peculiar `Type`. This is the role of the `TypeMatcher`. It indicates for a type if it knows
-a collector (encapsulated in an optional) or if it does not know this kind of type and returns
+an object builder encapsulated as an Optional or if it does not know this kind of type and returns
 `Optional.empty()`.
 
 ```java
@@ -135,6 +138,8 @@ The unit tests are in [JSONReaderTest.java](src/test/java/com/github/forax/frame
 1. Let's start small, in the class `JSONReader` write a method `parseJSON(text, class)` that takes
    a JSON text, and the class of a Java Beans and returns an instance of the class with
    initialized by calling the setters corresponding to the JSON keys.
+   For now, let's pretend that the JSON can not itself store another JSON Object and
+   that there is no JSON Array.
    
    For example, with the JSON object `{ "foo": 3, "bar": 4 }`, the method `parseJSON(text, class)`
    creates an instance of the class using the default constructor, then for the key "foo" calls
@@ -146,11 +151,15 @@ The unit tests are in [JSONReaderTest.java](src/test/java/com/github/forax/frame
    of `parseJSON` are the same.
    Note2: to avoid to find the setter in an array of properties each time there is a value,
    precompute a `Map<String, PropertyDescriptor>` that associate a property name to the property.
-   
+   We store this map is a record `BeanData` and cache it in a `ClassValue`. 
 
 2. We now want to support a JSON object defined inside a JSON object.
-   For that, we need a stack that stores a pair of `Map<String, PropertyDescriptor>` and bean instance
+   For that, we need a stack that stores a pair of `BeanData` and bean instance
    (otherwise we will not know which setter to call on which bean when we come back in a `endObject()`).
+   We call this pair, `Context` defined using a record
+   ```java
+   private record Context(BeanData beanData, Object result) { }
+   ```
    Change the code of `parseJSON(text, class)` to handle the recursive definition of JSON objects
    and check that the tests in the nested class "Q2" all pass.
 
@@ -160,43 +169,34 @@ The unit tests are in [JSONReaderTest.java](src/test/java/com/github/forax/frame
 
 
 3. We now want to abstract the code to support other model than the Java bean model.
-   For that we introduce a record `Collector` that let users define how to retrieve the type from a key
-   (`qualifier`), how to create a temporary object (`supplier`), how to store value into the temporary object
+   For that we introduce a record `ObjectBuilder` that let users define how to retrieve the type from a key
+   (`typeProvider`), how to create a temporary object (`supplier`), how to store value into the temporary object
    (`populater`) and how to create an immutable version of the temporary objet (`finisher`). 
    ```java
-   public record Collector<B>(Function<? super String, ? extends Type> qualifier,
-                           Supplier<? extends B> supplier, Populater<B> populater, Function<? super B, ?> finisher) {
-     public interface Populater<B> {
-       void populate(B builder, String key, Object value);
-     }
-   
-     @SuppressWarnings("unchecked")
-     private Collector<Object> raw() {
-       return (Collector<Object>) (Collector<?>) this;
+   public record ObjectBuilder<T>(Function<? super String, ? extends Type> typeProvider,
+                                  Supplier<? extends T> supplier,
+                                  Populater<? super T> populater,
+                                  Function<? super T, ?> finisher) {
+     public interface Populater<T> {
+       void populate(T instance, String key, Object value);
      }
    }
    ```
-   Before changing the code of `parseJSON(text, class)` to use a collector, let's first create a collector
-   for the Java Beans. For that, we will create a static method of `Collector` named `bean(beanClass)` that takes
-   a class of a bean as parameter and return a `Collector<Object>` able to create a Java bean instance
-   and populate it (a bean is inherently mutable,thus the finisher will be the identity function).
+   Before changing the code of `parseJSON(text, class)` to use an object builder, let's first create an `ObjectBuilder`
+   for the Java Beans. For that, we will create a static method in `ObjectBuilder` named `bean(beanClass)` that takes
+   a class of a bean as parameter and return a `ObjectBuilder<Object>` able to create a Java bean instance
+   and populate it (a bean is inherently mutable, thus the finisher will be the identity function).
    
-   Create the method `Collector.bean(beanClass)` and check that the tests in the nested class "Q3" all pass.
-
-   Note: the method `Collector.raw()` is useless for this question, but will be handy in the next one. 
-
-
-4. Now that we have a collector of beans, we can rewrite the code of `parseJSON(text, class)` to use
-   a `Collector<Object>` instead of a `Map<String, PropertyDescriptor>`.
-   To simulate the fact that in the future, there will be several collectors, we propose to declare
-   a private method `findCollector(type)` that for now always return the collector of beans.
+   On the method `ObjectBuilder.bean(beanClass)` is created, we can rewrite the code of `parseJSON(text, class)` to use
+   an `ObjectBuilder` instead of a `BeanData`. So the record `Context` is now defined as
    ```java
-   private Collector<?> findCollector(Type type) {
-     return Collector.bean(Utils.erase(type));
-   }
+   private record Context(ObjectBuilder<Object> objectBuilder, Object result) {}
    ```
    
-   You can notice that both a `Collector` and `findCollector(type)` works on `Type` and not on `Class`,
+   And then checks that the tests in the nested class "Q3" all pass.
+
+
+4. You can notice that an `ObjectBuilder` works on `Type` and not on `Class`,
    so we can add an overload to the method `parseJSON()` that takes a `Type` as second parameter
    instead of a `Class` so the code will work for all `Type`s.
    Fortunately, given that a `Class` is a `Type`, you do not have to duplicate the code between
@@ -206,28 +206,36 @@ The unit tests are in [JSONReaderTest.java](src/test/java/com/github/forax/frame
    and checks that the tests in the nested class "Q4" all pass.
    
 
-5. We now want to add a new `Collector` tailored for supporting JSON array as `java.util.List`,
-   for that add a method static `list(elementType)` in `Collector` that takes the type of
-   the element as parameter and returns the collector.
+5. We now want to add a new `ObjectBuilder` tailored for supporting JSON array as `java.util.List`,
+   for that add a method static `list(elementType)` in `ObjectBuilder` that takes the type of
+   the element as parameter and returns the object builder typed as `ObjectBuilder<List<Object>>`.
+   Write the method `list(elementType)` in `ObjectBuilder`.
 
-   We also want to let users to be able to add their own collectors, exactly, their own `TypeMatcher`.
+   We also want to users to be able to add their own object builders, exactly, their own `TypeMatcher`.
    ```java
    @FunctionalInterface
    public interface TypeMatcher {
-     Optional<Collector<?>> match(Type type);
+     Optional<ObjectBuilder<?>> match(Type type);
    }
    ```
    A `TypeMatcher` which specify for a type a collector to use (by returning a collector
-   wrapped into an `Optional`) or say that the type is not supported by the `TypeMartcher`
+   wrapped into an `Optional`) or say that the type is not supported by the `TypeMatcher`
    (and return `Optional.empty()`).
    
-   To add a `TypeMatcher`, we introduce a method `addTypeMatcher(typeMatcher)` and
-   modify the method `findCollector(type)` to call the `TypeMatcher`s
-   in reverse order of their insertion order.
-   If no `TypeMatcher` answer for a `Type`, use the `Collector.bean()`.
-   Checks that the tests in the nested class "Q5" all pass.
+   To add a `TypeMatcher`, we introduce a method `addTypeMatcher(typeMatcher)`.
+   The `TypeMatcher`s should be called the reverse order of the insertion order.
+   If no `TypeMatcher` answer for a `Type`, use the `ObjectBuilder.bean()`.
 
-   Note: there is a method `Utils.reverseList()` that reverse a List without actually moving the elements.
+   We now have two different object builders, so the `Context` need to be parametrized
+   by the type used by the object builder
+   ```java
+   private record Context<T>(ObjectBuilder<T> objectBuilder, T result)
+   ```
+   
+   Modify the code of `parseJSON(text, expectedType)` accordingly and  
+   checks that the tests in the nested class "Q5" all pass.
+
+   Note: there is a method `List.reversed()` that reverse a List without actually moving the elements.
 
 
 6. Creating a `Type` is not something easy for a user because all the implementations
@@ -253,7 +261,7 @@ The unit tests are in [JSONReaderTest.java](src/test/java/com/github/forax/frame
    
 
 7. We now want to support records.
-   Add a static method `record(recordClass)` in `Collector` so the first example at the beginning
+   Add a static method `record(recordClass)` in `ObjectBuilder` so the example at the beginning
    of this page works.
    Checks that the tests in the nested class "Q7" all pass.
    
