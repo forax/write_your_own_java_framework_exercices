@@ -23,13 +23,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.10.0</version>
+      <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.10.0</version>
+      <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -44,21 +44,19 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.13.0</version>
         <configuration>
-          <compilerArgs>
-            <compilerArg>--enable-preview</compilerArg>
-          </compilerArgs>
-          <release>21</release>
-          <source>21</source>
-          <target>21</target>
+          <enablePreview>true</enablePreview>
+          <release>23</release>
+          <source>23</source>
+          <target>23</target>
         </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.5</version>
         <configuration>
           <argLine>--enable-preview</argLine>
         </configuration>
