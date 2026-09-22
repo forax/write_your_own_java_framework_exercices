@@ -67,7 +67,7 @@ public final class JSONWriter {
     public <T> void configure(Class<? extends T> type, Function<? super T, String> function) {
         Objects.requireNonNull(type);
         Objects.requireNonNull(function);
-        Generator customGenerator = (writer, bean) -> function.apply(type.cast(bean));
+        Generator customGenerator = (_, bean) -> function.apply(type.cast(bean));
         if (map.putIfAbsent(type, customGenerator) != null) {
             throw new IllegalStateException("already exist " + type.getName());
         }

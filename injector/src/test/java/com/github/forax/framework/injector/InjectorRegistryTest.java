@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("unused")
 public class InjectorRegistryTest {
-  /*
+
   @Nested
   public class Q1 {
     @Test @Tag("Q1")
@@ -107,10 +107,11 @@ public class InjectorRegistryTest {
     }
     //@Test @Tag("Q2")
     //public void shouldNotCompilePreciseSignature() {
-    //  var registry = new InjectorRegistry();
-    //  registry.registerInstance(String.class, 3);
+      //var registry = new InjectorRegistry();
+      //registry.registerInstance(String.class, 3);
     //}
   }
+
 
 
   @Nested
@@ -372,6 +373,7 @@ public class InjectorRegistryTest {
   }
 
 
+
   @Nested
   public class Q6 {
     @Test @Tag("Q6")
@@ -494,6 +496,8 @@ public class InjectorRegistryTest {
     }
   }
 
+
+
   @Nested
   public class Q7 {
     static class Service {
@@ -545,5 +549,5 @@ public class InjectorRegistryTest {
       assertThrows(NullPointerException.class, () -> registry.registerProviderClass(null));
     }
   }
-  */
+
 }
