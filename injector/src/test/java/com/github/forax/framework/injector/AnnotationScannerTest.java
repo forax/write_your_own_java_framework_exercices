@@ -13,14 +13,11 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("unused")
 public class AnnotationScannerTest {
-  /*
+
   @Nested
   public class Q1 {
     @Test
@@ -94,6 +91,7 @@ public class AnnotationScannerTest {
       );
     }
   }    // end of Q3
+
 
 
   // Q4
@@ -195,5 +193,5 @@ public class AnnotationScannerTest {
     }
 
   }  // end of Q4
-   */
+
 }

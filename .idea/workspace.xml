@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="">
+    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="finish tp2">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/InjectorRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/InjectorRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/injector/src/test/java/com/github/forax/framework/injector/InjectorRegistryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/test/java/com/github/forax/framework/injector/InjectorRegistryTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/src/main/java/com/github/forax/framework/mapper/JSONWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/src/main/java/com/github/forax/framework/mapper/JSONWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/AnnotationScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/AnnotationScanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/injector/src/test/java/com/github/forax/framework/injector/AnnotationScannerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/test/java/com/github/forax/framework/injector/AnnotationScannerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +51,9 @@
   <component name="MavenRunner">
     <option name="jreName" value="homebrew-27" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -65,6 +67,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.AnnotationScannerTest$Q1.executor": "Run",
+    "JUnit.AnnotationScannerTest$Q2.executor": "Run",
+    "JUnit.AnnotationScannerTest$Q3.executor": "Run",
+    "JUnit.AnnotationScannerTest$Q4.executor": "Run",
     "JUnit.InjectorRegistryTest$Q1.executor": "Run",
     "JUnit.InjectorRegistryTest$Q1.registerInstancePreconditions.executor": "Debug",
     "JUnit.InjectorRegistryTest$Q2.executor": "Run",
@@ -124,8 +130,8 @@
       <command value="mvn package" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.InjectorRegistryTest">
-    <configuration name="InjectorRegistryTest$Q5.registerProviderClassWithSettersInjection" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.AnnotationScannerTest$Q4">
+    <configuration name="AnnotationScannerTest$Q1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="injector" />
       <extension name="coverage">
         <pattern>
@@ -133,30 +139,14 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest$Q5" />
-      <option name="METHOD_NAME" value="registerProviderClassWithSettersInjection" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="InjectorRegistryTest$Q6" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="injector" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.injector.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest$Q6" />
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest$Q1" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="InjectorRegistryTest$Q6.registerProviderClassMultipleInjectConstructors" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AnnotationScannerTest$Q2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="injector" />
       <extension name="coverage">
         <pattern>
@@ -164,15 +154,14 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest$Q6" />
-      <option name="METHOD_NAME" value="registerProviderClassMultipleInjectConstructors" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest$Q2" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="InjectorRegistryTest$Q7" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AnnotationScannerTest$Q3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="injector" />
       <extension name="coverage">
         <pattern>
@@ -180,8 +169,23 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest$Q7" />
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest$Q3" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AnnotationScannerTest$Q4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="injector" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.github.forax.framework.injector.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest$Q4" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -204,11 +208,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AnnotationScannerTest$Q4" />
+        <item itemvalue="JUnit.AnnotationScannerTest$Q3" />
+        <item itemvalue="JUnit.AnnotationScannerTest$Q2" />
+        <item itemvalue="JUnit.AnnotationScannerTest$Q1" />
         <item itemvalue="JUnit.InjectorRegistryTest" />
-        <item itemvalue="JUnit.InjectorRegistryTest$Q7" />
-        <item itemvalue="JUnit.InjectorRegistryTest$Q6" />
-        <item itemvalue="JUnit.InjectorRegistryTest$Q5.registerProviderClassWithSettersInjection" />
-        <item itemvalue="JUnit.InjectorRegistryTest$Q6.registerProviderClassMultipleInjectConstructors" />
       </list>
     </recent_temporary>
   </component>
@@ -247,7 +251,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="add a section on dependency checking" />
     <MESSAGE value="Utils.defaultConstructor and Utils.newInstance should propagate the type of the class" />
     <MESSAGE value="do not try to validate the dependency graph before calling lookup()" />
     <MESSAGE value="comment starts at the wrong place" />
@@ -272,7 +275,8 @@
     <MESSAGE value="update to Java 21" />
     <MESSAGE value="remove useless throws Throwable" />
     <MESSAGE value="update IntelliJ files" />
-    <option name="LAST_COMMIT_MESSAGE" value="update IntelliJ files" />
+    <MESSAGE value="finish tp2" />
+    <option name="LAST_COMMIT_MESSAGE" value="finish tp2" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
