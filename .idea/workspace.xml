@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="finish tp2">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/maven.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/maven.yml" afterDir="false" />
+    <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="add ci">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/AnnotationScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/AnnotationScanner.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -250,7 +250,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Utils.defaultConstructor and Utils.newInstance should propagate the type of the class" />
     <MESSAGE value="do not try to validate the dependency graph before calling lookup()" />
     <MESSAGE value="comment starts at the wrong place" />
     <MESSAGE value="rework interceptor code/questions" />
@@ -275,7 +274,8 @@
     <MESSAGE value="remove useless throws Throwable" />
     <MESSAGE value="update IntelliJ files" />
     <MESSAGE value="finish tp2" />
-    <option name="LAST_COMMIT_MESSAGE" value="finish tp2" />
+    <MESSAGE value="add ci" />
+    <option name="LAST_COMMIT_MESSAGE" value="add ci" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

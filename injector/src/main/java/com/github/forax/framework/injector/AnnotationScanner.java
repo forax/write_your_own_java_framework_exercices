@@ -29,6 +29,7 @@ public class AnnotationScanner {
     }
 
     static List<Class<?>> findAllClasses(String packageName, ClassLoader classLoader)  {
+        //test
         var enumerates = Utils2.getResources(packageName.replace('.', '/'), classLoader);
         if (!enumerates.hasMoreElements()) {
             throw new IllegalStateException();
