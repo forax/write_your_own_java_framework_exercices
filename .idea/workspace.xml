@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="add ci">
-      <change beforePath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/AnnotationScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/injector/src/main/java/com/github/forax/framework/injector/AnnotationScanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapper/src/main/java/com/github/forax/framework/mapper/JSONReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/src/main/java/com/github/forax/framework/mapper/JSONReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapper/src/test/java/com/github/forax/framework/mapper/JSONReaderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/src/test/java/com/github/forax/framework/mapper/JSONReaderTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +82,11 @@
     "JUnit.InjectorRegistryTest$Q6.registerProviderClassMultipleInjectConstructors.executor": "Run",
     "JUnit.InjectorRegistryTest$Q7.executor": "Run",
     "JUnit.InjectorRegistryTest.executor": "Run",
+    "JUnit.JSONReaderTest$Q2.executor": "Run",
+    "JUnit.JSONReaderTest$Q2.parseJSONRecursive.executor": "Run",
+    "JUnit.JSONReaderTest$Q4.executor": "Run",
+    "JUnit.JSONReaderTest$Q5.executor": "Run",
+    "JUnit.JSONReaderTest.executor": "Run",
     "JUnit.JSONWriterTest$Q1.executor": "Run",
     "JUnit.JSONWriterTest$Q1.toJSONPrimitive.executor": "Run",
     "JUnit.JSONWriterTest$Q2.executor": "Run",
@@ -92,7 +99,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "full.screen.before.presentation.mode": "true",
-    "git-widget-placeholder": "#3 on tp2/dependancy-injection",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/samyoki/Desktop/esiee/semestre3/java-inside/write_your_own_java_framework_exercices",
     "node.js.detected.package.eslint": "true",
@@ -128,77 +135,78 @@
       <command value="mvn package" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.AnnotationScannerTest$Q4">
-    <configuration name="AnnotationScannerTest$Q1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="injector" />
+  <component name="RunManager" selected="JUnit.JSONReaderTest">
+    <configuration name="JSONReaderTest$Q2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mapper" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.injector.*" />
+          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest$Q1" />
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest$Q2" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnotationScannerTest$Q2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="injector" />
+    <configuration name="JSONReaderTest$Q2.parseJSONRecursive" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mapper" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.injector.*" />
+          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest$Q2" />
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest$Q2" />
+      <option name="METHOD_NAME" value="parseJSONRecursive" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JSONReaderTest$Q4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mapper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest$Q4" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnotationScannerTest$Q3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="injector" />
+    <configuration name="JSONReaderTest$Q5" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mapper" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.injector.*" />
+          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest$Q3" />
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest$Q5" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnotationScannerTest$Q4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="injector" />
+    <configuration name="JSONReaderTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mapper" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.injector.*" />
+          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.AnnotationScannerTest$Q4" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="InjectorRegistryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="injector" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.injector.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.injector" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.injector.InjectorRegistryTest" />
+      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper" />
+      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -206,11 +214,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AnnotationScannerTest$Q4" />
-        <item itemvalue="JUnit.AnnotationScannerTest$Q3" />
-        <item itemvalue="JUnit.AnnotationScannerTest$Q2" />
-        <item itemvalue="JUnit.AnnotationScannerTest$Q1" />
-        <item itemvalue="JUnit.InjectorRegistryTest" />
+        <item itemvalue="JUnit.JSONReaderTest" />
+        <item itemvalue="JUnit.JSONReaderTest$Q5" />
+        <item itemvalue="JUnit.JSONReaderTest$Q4" />
+        <item itemvalue="JUnit.JSONReaderTest$Q2.parseJSONRecursive" />
+        <item itemvalue="JUnit.JSONReaderTest$Q2" />
       </list>
     </recent_temporary>
   </component>

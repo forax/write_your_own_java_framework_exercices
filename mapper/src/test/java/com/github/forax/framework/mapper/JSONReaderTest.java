@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JSONReaderTest {
-  /*
+
   @Nested
   public class Q1 {
 
@@ -558,5 +558,4 @@ public class JSONReaderTest {
     }
 
   }  // end of Q7
-  */
 }
