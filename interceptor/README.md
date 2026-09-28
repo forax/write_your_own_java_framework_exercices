@@ -105,11 +105,6 @@ Step 1, we create an interceptor registry and add an around advice that checks t
 Step 2, we create a proxy in between the interface and the implementation 
 ```java
     var proxy = registry.createProxy(Hello.class, hello);
-
-    assertAll(
-        () -> assertEquals("hello around advice", proxy.say("hello", "around advice")),
-        () -> assertThrows(NullPointerException.class, () -> proxy.say("hello", null))
-        );
 ```
 
 We can test the proxy with several arguments, null or not
@@ -177,6 +172,8 @@ at each call.
    which return a reversed list without moving the elements of the initial list.
    Add the method `getInvocation`.
    Check that the tests in the nested class "Q4" all pass.
+
+   ![get_invocation_chaining.png](get_invocation_chaining.png)
 
 
 5. We know want to change the implementation to only uses interceptor internally
