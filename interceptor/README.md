@@ -7,8 +7,8 @@ intercepted by this interceptor.
 
 ## Advice and interceptor
 
-There are more or less two different kind of API to intercept a method call.
-- the around advice, an interface with two methods, `before` and `after`that are respectively called
+There are more or less two different kinds of API to intercept a method call.
+- the around advice, an interface with two methods, `before` and `after` that are respectively called
   before and after a call.
   ```java
   public interface AroundAdvice {
@@ -16,9 +16,10 @@ There are more or less two different kind of API to intercept a method call.
     void after(Object instance, Method method, Object[] args, Object result) throws Throwable;
   }
   ```
-  The `instance` is the object on which the method is be called, `method` is the method called,
-  `args` are the arguments of the call (or `null` is there is no argument).
-  The last parameter of the method `after`, `result` is the returned value of the method call.
+  The `instance` is the object on which the method is called, `method` is the method called,
+  `args` are the arguments of the call (or `null` if there is no argument).
+  The last parameter of the method `after`, `result` is the returned value of the call
+- or the exception if the method call throws an exception.
 
 - one single method that takes as last parameter a way to call the next interceptor
   ```java
@@ -43,17 +44,18 @@ The interceptor API is more powerful and can be used to simulate the around advi
 
 The interface we are implementing here, is very similar to
 [Spring method interceptor](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/aopalliance/intercept/MethodInterceptor.html),
-[CDI interceptor](https://docs.oracle.com/javaee/6/tutorial/doc/gkhjx.html) or
+[CDI interceptor](https://javadoc.io/doc/jakarta.interceptor/jakarta.interceptor-api/latest/jakarta.interceptor/jakarta/interceptor/package-summary.html) or
 [Guice interceptor](https://www.baeldung.com/guice).
 
-All of them are using the same API provided by the
+Most of them are using the same API provided by the
 [Aspect Oriented Programming Alliance](http://aopalliance.sourceforge.net/)
 which is a group created to define a common API for interceptors in Java.
 Compared to the API we are about to implement, the AOP Alliance API encapsulates the parameters
 (instance, method, args, link to the next interceptor) inside the interface `MethodInvocation`.
 
 [Aspect Oriented Programming, AOP](https://en.wikipedia.org/wiki/Aspect-oriented_programming) is a more general
-conceptual framework from the beginning of 2000s, an interceptor is equivalent to the around advice.
+conceptual framework from the late 1990s (Kiczales et al., 1997),
+an interceptor is similar to the around advice.
 
 
 ## An example
@@ -104,6 +106,7 @@ Step 1, we create an interceptor registry and add an around advice that checks t
 
 Step 2, we create a proxy in between the interface and the implementation 
 ```java
+    var hello = new HelloImpl();
     var proxy = registry.createProxy(Hello.class, hello);
 ```
 
@@ -118,10 +121,10 @@ We can test the proxy with several arguments, null or not
 
 ## The interceptor registry
 
-An `InterceptorRegistry` is a class that manage the interceptors, it defines three public methods
+An `InterceptorRegistry` is a class that manages the interceptors, it defines three public methods (API)
 - `addAroundAdvice(annotationClass, aroundAdvice)` register an around advice for an annotation
 - `addInterceptor(annotationClass, interceptor)` register an interceptor for an annotation
-- `createProxy(interfaceType, instance)` create a proxy that for each annotated methods will call
+- `createProxy(interfaceType, instance)` create a proxy that, for each annotated method, calls
    the advices/interceptors before calling the method on the instance.
 
 
@@ -148,9 +151,9 @@ at each call.
    parameter and returns a list of all advices that should be called.
    An around advice is called for a method if that method is annotated with an annotation of
    the annotation class on which the advice is registered.
-   The idea is to gather [all annotations](../COMPANION.md#annotation) of that method
-   and find all corresponding advices.
-   Once the method `findAdvices` works, modify the method `createProxy`to use it.
+   The idea is to gather [all annotations](../COMPANION.md#annotation) of that method and find all corresponding advices.
+   In which order the advices should be called ?
+   Once the method `findAdvices` works, modify the method `createProxy` to use it.
    Check that the tests in the nested class "Q2" all pass.
 
 
@@ -172,11 +175,12 @@ at each call.
    which return a reversed list without moving the elements of the initial list.
    Add the method `getInvocation`.
    Check that the tests in the nested class "Q4" all pass.
+   Implementation Hint: the interface `Invocation` has only one public method.
 
    ![get_invocation_chaining.png](get_invocation_chaining.png)
 
 
-5. We know want to change the implementation to only uses interceptor internally
+5. We now want to change the implementation to only uses interceptor internally
    and rewrite the method `addAroundAdvice` to use an interceptor that will calls
    the around advice.
    Change the implementation of `addAroundAdvice` to use an interceptor, and modify the
@@ -186,7 +190,7 @@ at each call.
 
    
 6. Add a cache avoiding recomputing a new `Invocation` each time a method is called.
-   When the cache should be invalidated ? Change the code to invalidate the cache when necessary.
+   When should the cache be invalidated? Change the code to invalidate the cache when necessary.
    Check that the tests in the nested class "Q6" all pass.
 
 
