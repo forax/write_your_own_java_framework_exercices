@@ -18,8 +18,8 @@ There are more or less two different kinds of API to intercept a method call.
   ```
   The `instance` is the object on which the method is called, `method` is the method called,
   `args` are the arguments of the call (or `null` if there is no argument).
-  The last parameter of the method `after`, `result` is the returned value of the call
-- or the exception if the method call throws an exception.
+  The last parameter of the method `after`, `result` is the returned value of the call.
+  If the method call throws an exception, the method `after` is not called.
 
 - one single method that takes as last parameter a way to call the next interceptor
   ```java
@@ -61,7 +61,7 @@ an interceptor is similar to the around advice.
 ## An example
 
 The API works in two steps, first register an advice (or an interceptor) for an annotation,
-then creates a proxy of an interface. When a method of the proxy is called through the interface,
+then create a proxy of an interface. When a method of the proxy is called through the interface,
 if the method is annotated, the corresponding advices/interceptors will be called. 
 
 For example, if we want to implement an advice that will check that the arguments of a method are not null.
@@ -80,7 +80,7 @@ interface Hello {
 }
 ```
 
-We also have an implementation of that interface, that provides the behavior the user want
+We also have an implementation of that interface, that provides the behavior the user wants
 ```java
 class HelloImpl implements Hello {
    @Override
@@ -143,21 +143,25 @@ at each call.
    - a method `createProxy(type, delegate)` that creates a [dynamic proxy](../COMPANION.md#dynamic-proxy)
      implementing the interface and calls the method `before` and `after` of the around advice
      (if one is defined) around the call of each method using `Utils.invokeMethod()`.
+   For the moment, the registry only needs to support at most one around advice
+   and ignore the annotation class entirely.
    Check that the tests in the nested class "Q1" all pass.
    
 
 2. Change the implementation of `addAroundAdvice` to store all advices by annotation class.
    And add a package private instance method `findAdvices(method)` that takes a `java.lang.reflect.Method` as
    parameter and returns a list of all advices that should be called.
-   An around advice is called for a method if that method is annotated with an annotation of
+   An `AroundAdvice` is called for a method if that method is annotated with an annotation of
    the annotation class on which the advice is registered.
    The idea is to gather [all annotations](../COMPANION.md#annotation) of that method and find all corresponding advices.
-   In which order the advices should be called ?
+   The advices should be called in the order in which their corresponding annotations are declared on the method.
+   For multiple advices registered for the same annotation, they should be called in the order
+   in which they were added to the registry.
    Once the method `findAdvices` works, modify the method `createProxy` to use it.
    Check that the tests in the nested class "Q2" all pass.
 
 
-3. We now want to be support the interceptor API, and for now we will implement it as an addon,
+3. We now want to support the interceptor API, and for now we will implement it as an addon,
    without changing the support of the around advices.
    Add a method `addInterceptor(annotationClass, interceptor)` and a method
    `findInterceptors(method)` that respectively add an interceptor for an annotation class and
@@ -169,10 +173,10 @@ at each call.
    as parameter and returns an Invocation which when it is called will call the first interceptor
    with as last argument an Invocation allowing to call the second interceptor, etc.
    The last invocation will call the method on the instance with the arguments.
-   Because each Invocation need to know the next Invocation, the chained list of Invocation
-   need to be constructed from the last one to the first one.
+   Because each Invocation needs to know the next Invocation, the chained list of Invocation
+   needs to be constructed from the last one to the first one.
    To loop over the interceptors in reverse order, you can use the method `List.reversed()`
-   which return a reversed list without moving the elements of the initial list.
+   which returns a reversed list without moving the elements of the initial list.
    Add the method `getInvocation`.
    Check that the tests in the nested class "Q4" all pass.
    Implementation Hint: the interface `Invocation` has only one public method.
@@ -181,7 +185,7 @@ at each call.
 
 
 5. We now want to change the implementation to only uses interceptor internally
-   and rewrite the method `addAroundAdvice` to use an interceptor that will calls
+   and rewrite the method `addAroundAdvice` to use an interceptor that will call
    the around advice.
    Change the implementation of `addAroundAdvice` to use an interceptor, and modify the
    code of `createProxy` to use interceptors instead of advices.
