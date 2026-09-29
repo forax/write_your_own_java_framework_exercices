@@ -143,6 +143,7 @@ at each call.
    - a method `createProxy(type, delegate)` that creates a [dynamic proxy](../COMPANION.md#dynamic-proxy)
      implementing the interface and calls the method `before` and `after` of the around advice
      (if one is defined) around the call of each method using `Utils.invokeMethod()`.
+   
    For the moment, the registry only needs to support at most one around advice
    and ignore the annotation class entirely.
    Check that the tests in the nested class "Q1" all pass.
