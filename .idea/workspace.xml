@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="74bd28e4-ede9-4bbb-a92f-dae249a45c06" name="Changes" comment="add ci">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/src/main/java/com/github/forax/framework/mapper/JSONReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/src/main/java/com/github/forax/framework/mapper/JSONReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/src/test/java/com/github/forax/framework/mapper/JSONReaderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/src/test/java/com/github/forax/framework/mapper/JSONReaderTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interceptor/src/main/java/org/github/forax/framework/interceptor/InterceptorRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/interceptor/src/main/java/org/github/forax/framework/interceptor/InterceptorRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interceptor/src/test/java/org/github/forax/framework/interceptor/InterceptorRegistryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/interceptor/src/test/java/org/github/forax/framework/interceptor/InterceptorRegistryTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,6 +82,14 @@
     "JUnit.InjectorRegistryTest$Q6.registerProviderClassMultipleInjectConstructors.executor": "Run",
     "JUnit.InjectorRegistryTest$Q7.executor": "Run",
     "JUnit.InjectorRegistryTest.executor": "Run",
+    "JUnit.InterceptorRegistryTest$Q2.findAdvices.executor": "Run",
+    "JUnit.InterceptorRegistryTest$Q2.withTwoAdvices.executor": "Run",
+    "JUnit.InterceptorRegistryTest$Q3.executor": "Run",
+    "JUnit.InterceptorRegistryTest$Q5.executor": "Run",
+    "JUnit.InterceptorRegistryTest$Q6.executor": "Run",
+    "JUnit.InterceptorRegistryTest$Q7.annotationOnClassMethodAndParametersDoNotRepeat.executor": "Run",
+    "JUnit.InterceptorRegistryTest$Q7.executor": "Run",
+    "JUnit.InterceptorRegistryTest.executor": "Run",
     "JUnit.JSONReaderTest$Q2.executor": "Run",
     "JUnit.JSONReaderTest$Q2.parseJSONRecursive.executor": "Run",
     "JUnit.JSONReaderTest$Q4.executor": "Run",
@@ -99,7 +107,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "full.screen.before.presentation.mode": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "tp3/interceptor",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/samyoki/Desktop/esiee/semestre3/java-inside/write_your_own_java_framework_exercices",
     "node.js.detected.package.eslint": "true",
@@ -135,78 +143,78 @@
       <command value="mvn package" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.JSONReaderTest">
-    <configuration name="JSONReaderTest$Q2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mapper" />
+  <component name="RunManager" selected="JUnit.InterceptorRegistryTest$Q7">
+    <configuration name="InterceptorRegistryTest$Q5" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="interceptor" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
+          <option name="PATTERN" value="org.github.forax.framework.interceptor.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest$Q2" />
+      <option name="PACKAGE_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest" />
+      <option name="MAIN_CLASS_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest$Q5" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="JSONReaderTest$Q2.parseJSONRecursive" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mapper" />
+    <configuration name="InterceptorRegistryTest$Q6" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="interceptor" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
+          <option name="PATTERN" value="org.github.forax.framework.interceptor.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest$Q2" />
-      <option name="METHOD_NAME" value="parseJSONRecursive" />
+      <option name="PACKAGE_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest" />
+      <option name="MAIN_CLASS_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest$Q6" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="InterceptorRegistryTest$Q7" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="interceptor" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.github.forax.framework.interceptor.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest" />
+      <option name="MAIN_CLASS_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest$Q7" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="InterceptorRegistryTest$Q7.annotationOnClassMethodAndParametersDoNotRepeat" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="interceptor" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.github.forax.framework.interceptor.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest" />
+      <option name="MAIN_CLASS_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest$Q7" />
+      <option name="METHOD_NAME" value="annotationOnClassMethodAndParametersDoNotRepeat" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="JSONReaderTest$Q4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mapper" />
+    <configuration name="InterceptorRegistryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="interceptor" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
+          <option name="PATTERN" value="org.github.forax.framework.interceptor.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest$Q4" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="JSONReaderTest$Q5" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mapper" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest$Q5" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="JSONReaderTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mapper" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.github.forax.framework.mapper.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.github.forax.framework.mapper" />
-      <option name="MAIN_CLASS_NAME" value="com.github.forax.framework.mapper.JSONReaderTest" />
+      <option name="PACKAGE_NAME" value="org.github.forax.framework.interceptor" />
+      <option name="MAIN_CLASS_NAME" value="org.github.forax.framework.interceptor.InterceptorRegistryTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -214,11 +222,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.JSONReaderTest" />
-        <item itemvalue="JUnit.JSONReaderTest$Q5" />
-        <item itemvalue="JUnit.JSONReaderTest$Q4" />
-        <item itemvalue="JUnit.JSONReaderTest$Q2.parseJSONRecursive" />
-        <item itemvalue="JUnit.JSONReaderTest$Q2" />
+        <item itemvalue="JUnit.InterceptorRegistryTest$Q7" />
+        <item itemvalue="JUnit.InterceptorRegistryTest$Q7.annotationOnClassMethodAndParametersDoNotRepeat" />
+        <item itemvalue="JUnit.InterceptorRegistryTest$Q6" />
+        <item itemvalue="JUnit.InterceptorRegistryTest" />
+        <item itemvalue="JUnit.InterceptorRegistryTest$Q5" />
       </list>
     </recent_temporary>
   </component>
